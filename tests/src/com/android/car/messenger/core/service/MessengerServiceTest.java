@@ -73,8 +73,14 @@ public class MessengerServiceTest {
     public void setup() throws TimeoutException {
         MockitoAnnotations.initMocks(this);
 
-        mAppFactory = new AppFactoryTestImpl(null, mDataModel, null, null);
+        MutableLiveData<Conversation> unreadLiveData = mock(MutableLiveData.class);
+        MutableLiveData<String> removedLiveData = mock(MutableLiveData.class);
+
+        when(mDataModel.getUnreadMessages()).thenReturn(unreadLiveData);
+        when(mDataModel.onConversationRemoved()).thenReturn(removedLiveData);
+
         mContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        mAppFactory = new AppFactoryTestImpl(mContext, mDataModel, null, null);
 
         Intent intent = new Intent(mContext, MessengerService.class);
         IBinder binder = mServiceTestRule.bindService(intent);
