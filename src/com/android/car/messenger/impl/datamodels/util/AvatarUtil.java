@@ -60,6 +60,8 @@ import java.util.List;
  */
 public final class AvatarUtil {
 
+    private static final boolean DBG = false;
+
     private AvatarUtil() {}
 
     private static final class GroupAvatarConfigs {
@@ -69,6 +71,7 @@ public final class AvatarUtil {
         int mBackgroundColor;
         int mStrokeColor;
         boolean mFillBackground;
+        float mCornerRadius;
     }
 
     /**
@@ -82,19 +85,7 @@ public final class AvatarUtil {
             return null;
         }
 
-        GroupAvatarConfigs groupAvatarConfigs = new GroupAvatarConfigs();
-        Resources resources = context.getResources();
-        int size = resources.getDimensionPixelSize(R.dimen.conversation_avatar_width);
-        groupAvatarConfigs.mWidth = size;
-        groupAvatarConfigs.mHeight = size;
-        groupAvatarConfigs.mMaximumGroupSize =
-                resources.getInteger(R.integer.group_avatar_max_group_size);
-        groupAvatarConfigs.mBackgroundColor =
-                resources.getColor(R.color.group_avatar_background_color, context.getTheme());
-        groupAvatarConfigs.mStrokeColor =
-                resources.getColor(R.color.group_avatar_stroke_color, context.getTheme());
-        groupAvatarConfigs.mFillBackground =
-                context.getResources().getBoolean(R.bool.group_avatar_fill_background);
+        GroupAvatarConfigs groupAvatarConfigs = readGroupAvatarConfigs(context);
 
         if (participantsIcon.size() == 1 || groupAvatarConfigs.mMaximumGroupSize == 1) {
             return participantsIcon.get(0);
@@ -104,21 +95,45 @@ public final class AvatarUtil {
     }
 
     /**
-     * Resolves person avatar to either the provided bitmap clipped into a circle or a letter
-     * drawable
+     * Resolves person avatar to either the provided bitmap clipped into a round rect or a letter
+     * drawable.
      */
     @Nullable
     public static Bitmap resolvePersonAvatar(
             @NonNull Context context, @Nullable Bitmap bitmap, @Nullable CharSequence name) {
         if (bitmap != null) {
-            return AvatarUtil.createClippedCircle(bitmap);
+            return AvatarUtil.createClippedCircle(bitmap, readGroupAvatarConfigs(context));
         } else {
             return createLetterTile(context, name);
         }
     }
 
+    private static GroupAvatarConfigs readGroupAvatarConfigs(Context context) {
+        GroupAvatarConfigs groupAvatarConfigs = new GroupAvatarConfigs();
+        Resources resources = context.getResources();
+        int size = resources.getDimensionPixelSize(R.dimen.conversation_avatar_width);
+
+        groupAvatarConfigs.mWidth = size;
+        groupAvatarConfigs.mHeight = size;
+        groupAvatarConfigs.mMaximumGroupSize =
+                resources.getInteger(R.integer.group_avatar_max_group_size);
+        groupAvatarConfigs.mBackgroundColor =
+                resources.getColor(R.color.group_avatar_background_color, context.getTheme());
+        groupAvatarConfigs.mStrokeColor =
+                resources.getColor(R.color.group_avatar_stroke_color, context.getTheme());
+        groupAvatarConfigs.mFillBackground =
+                resources.getBoolean(R.bool.group_avatar_fill_background);
+        groupAvatarConfigs.mCornerRadius =
+                (float) Math.min(
+                        100,
+                        resources.getInteger(R.integer.group_avatar_images_corner_radius))
+                            / 100F;
+
+        return groupAvatarConfigs;
+    }
+
     /**
-     * Create a {@link Bitmap} for the given name
+     * Create a {@link Bitmap} for the given name.
      *
      * @param name will decide the color for the drawable. If null, a default color will be used.
      */
@@ -135,18 +150,26 @@ public final class AvatarUtil {
         return drawable.toBitmap(size);
     }
 
-    /** Returns a circle-clipped bitmap */
+    /** Returns a clipped bitmap by the corner radius factor. */
     @NonNull
-    private static Bitmap createClippedCircle(Bitmap bitmap) {
+    private static Bitmap createClippedCircle(
+            Bitmap bitmap, GroupAvatarConfigs groupAvatarConfigs) {
         final int width = bitmap.getWidth();
         final int height = bitmap.getHeight();
         final Bitmap outputBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+        float cornerRadius = groupAvatarConfigs.mCornerRadius;
 
         final Path path = new Path();
-        path.addCircle(
-                (float) (width / 2),
-                (float) (height / 2),
-                (float) min(width, (height / 2)),
+        float widthHeight = (float) min(width, (height / 2));
+        float x = (float) (width / 2);
+        float y = (float) (height / 2);
+        path.addRoundRect(
+                x,
+                y,
+                x + widthHeight,
+                y + widthHeight,
+                cornerRadius * widthHeight / 2f,
+                cornerRadius * widthHeight / 2f,
                 Path.Direction.CCW);
 
         final Canvas canvas = new Canvas(outputBitmap);
@@ -155,7 +178,7 @@ public final class AvatarUtil {
         return outputBitmap;
     }
 
-    /** Creates a group avatar bitmap */
+    /** Creates a group avatar bitmap. */
     @NonNull
     private static Bitmap createGroupAvatarBitmap(
             @NonNull List<Bitmap> participantsIcon, GroupAvatarConfigs groupAvatarConfigs) {
@@ -167,8 +190,10 @@ public final class AvatarUtil {
                 generateDestRectArray(
                         width,
                         height,
-                        /* cropToCircle= */ true,
-                        min(participantsIcon.size(), groupAvatarConfigs.mMaximumGroupSize));
+                        min(participantsIcon.size(), groupAvatarConfigs.mMaximumGroupSize),
+                        groupAvatarConfigs.mCornerRadius);
+
+        drawDebugBackground(canvas, width, height, groupAvatarConfigs.mCornerRadius);
 
         for (int i = 0; i < rect.length; i++) {
             RectF avatarDestOnGroup = rect[i];
@@ -199,13 +224,36 @@ public final class AvatarUtil {
                     smallCircleRect,
                     groupAvatarConfigs.mFillBackground,
                     groupAvatarConfigs.mBackgroundColor,
-                    groupAvatarConfigs.mStrokeColor);
+                    groupAvatarConfigs.mStrokeColor,
+                    groupAvatarConfigs.mCornerRadius);
             Matrix matrix = new Matrix();
             matrix.setRectToRect(smallCircleRect, avatarDestOnGroup, Matrix.ScaleToFit.FILL);
             canvas.drawBitmap(smallCircleBitmap, matrix, new Paint(Paint.ANTI_ALIAS_FLAG));
         }
 
         return bitmap;
+    }
+
+    private static void drawDebugBackground(
+            Canvas canvas, int width, int height, float cornerRadius) {
+        if (!DBG) {
+            return;
+        }
+        final Paint stroke = new Paint();
+        stroke.setAntiAlias(true);
+        stroke.setColor(Color.LTGRAY);
+        stroke.setStyle(Paint.Style.FILL);
+        final float strokeWidth = 6f;
+        stroke.setStrokeWidth(strokeWidth);
+
+        float intersect = stroke.getStrokeWidth() / 2f;
+        RectF strokeDest = new RectF(0, 0, width, height);
+        strokeDest.inset(intersect, intersect);
+        canvas.drawRoundRect(
+                strokeDest,
+                cornerRadius * strokeDest.width() / 2f,
+                cornerRadius * strokeDest.height() / 2f,
+                stroke);
     }
 
     /**
@@ -218,6 +266,7 @@ public final class AvatarUtil {
      * @param dest The destination bound on the canvas.
      * @param fillBackground when set, fill the circle with backgroundColor
      * @param strokeColor draw a border outside the circle with strokeColor
+     * @param cornerRadius roundness factor of the edge of the rectangle to render into
      */
     private static void drawBitmapWithCircleOnCanvas(
             @NonNull Bitmap bitmap,
@@ -226,7 +275,8 @@ public final class AvatarUtil {
             @NonNull RectF dest,
             boolean fillBackground,
             int backgroundColor,
-            int strokeColor) {
+            int strokeColor,
+            float cornerRadius) {
         // Draw bitmap through shader first.
         final BitmapShader shader = new BitmapShader(bitmap, TileMode.CLAMP, TileMode.CLAMP);
         final Matrix matrix = new Matrix();
@@ -240,11 +290,19 @@ public final class AvatarUtil {
         bitmapPaint.setAntiAlias(true);
         if (fillBackground) {
             bitmapPaint.setColor(backgroundColor);
-            canvas.drawCircle(dest.centerX(), dest.centerX(), dest.width() / 2f, bitmapPaint);
+            canvas.drawRoundRect(
+                    dest,
+                    cornerRadius * dest.width() / 2f,
+                    cornerRadius * dest.height() / 2f,
+                    bitmapPaint);
         }
 
         bitmapPaint.setShader(shader);
-        canvas.drawCircle(dest.centerX(), dest.centerX(), dest.width() / 2f, bitmapPaint);
+        canvas.drawRoundRect(
+                dest,
+                cornerRadius * dest.width() / 2f,
+                cornerRadius * dest.height() / 2f,
+                bitmapPaint);
         bitmapPaint.setShader(null);
 
         if (strokeColor != Color.TRANSPARENT) {
@@ -254,10 +312,14 @@ public final class AvatarUtil {
             stroke.setStyle(Paint.Style.STROKE);
             final float strokeWidth = 6f;
             stroke.setStrokeWidth(strokeWidth);
-            canvas.drawCircle(
-                    dest.centerX(),
-                    dest.centerX(),
-                    /* radius= */ dest.width() / 2f - stroke.getStrokeWidth() / 2f,
+
+            float intersect = stroke.getStrokeWidth() / 2f;
+            RectF strokeDest = new RectF(dest);
+            strokeDest.inset(intersect, intersect);
+            canvas.drawRoundRect(
+                    strokeDest,
+                    cornerRadius * strokeDest.width() / 2f,
+                    cornerRadius * strokeDest.height() / 2f,
                     stroke);
         }
     }
@@ -273,138 +335,120 @@ public final class AvatarUtil {
     /**
      * Generates an array of {@link RectF} which represents where each of the individual avatar
      * should be located in the final group avatar image. The location of each avatar depends on the
-     * size of the group and the size of the overall group avatar size. If we're cropping to a
-     * circle, inset the rects so the circle surrounds all the mini-avatars.
+     * size of the group and the size of the overall group avatar size.
      */
     public static RectF[] generateDestRectArray(
-            int desiredWidth, int desiredHeight, boolean cropToCircle, int groupSize) {
+            int desiredWidth,
+            int desiredHeight,
+            int groupSize,
+            float cornerRadius) {
         float halfWidth = desiredWidth / 2F;
         float halfHeight = desiredHeight / 2F;
 
-        // If we're cropping to a circle, calculate an inset so that all the mini-avatars will fit
-        // inside the circle.
-        float inset =
-                cropToCircle ? (float) ((Math.hypot(halfWidth, halfHeight) - halfWidth) / 2f) : 0F;
         RectF[] destArray = new RectF[groupSize];
+        float outerRadius = Math.min(desiredWidth, desiredHeight) / 2F;
+        float imageSize = outerRadius;
         switch (groupSize) {
+            case 1:
+                destArray[0] = new RectF(0F, 0F, desiredWidth, desiredHeight);
+                break;
             case 2:
                 /*
-                 * +-------+
-                 * | 0 |   |
-                 * +-------+
-                 * |   | 1 |
-                 * +-------+         *
-                 * We want two circles which touches in the center. To get this we know that
-                 * the diagonal
-                 * of the overall group avatar is squareRoot(2) * w We also know that the two
-                 * circles
-                 * touches the at the center of the overall group avatar and the distance from
-                 * the center of
-                 * the circle to the corner of the group avatar is radius * squareRoot(2).
-                 * Therefore, the
-                 * following emerges.
-                 *
-                 * w * squareRoot(2) = 2 (radius + radius * squareRoot(2)) Solving for radius
-                 * we get: d =
-                 * 2 * radius = ( squareRoot(2) / (squareRoot(2) + 1)) * w d = (2 - squareRoot(2)
-                 * ) * w
-                 */
-                float diameter = (float) ((2 - Math.sqrt(2)) * ((float) desiredWidth - inset));
-                destArray[0] = new RectF(inset, inset, diameter, diameter);
+                * +-------+
+                * | 0 |   |
+                * +-------+
+                * |   | 1 |
+                * +-------+
+                * We want two circles which touches in the center. To get this we know that
+                * the diagonal
+                * of the overall group avatar is squareRoot(2) * w We also know that the two
+                * circles
+                * touches the at the center of the overall group avatar and the distance from
+                * the center of
+                * the circle to the corner of the group avatar is radius * squareRoot(2).
+                * Therefore, the
+                * following emerges.
+                */
+                float image2inset = cornerRadius * (float) Math.sqrt(0.5F) * outerRadius / 4F;
+                float sqrt2 = (float) Math.sqrt(2F);
+                destArray[0] =
+                        new RectF(
+                                image2inset,
+                                image2inset,
+                                imageSize + image2inset / sqrt2,
+                                imageSize + image2inset / sqrt2);
                 destArray[1] =
                         new RectF(
-                                /* left= */ (float) desiredWidth - diameter,
-                                /* top= */ (float) desiredHeight - diameter,
-                                /* right= */ (float) desiredWidth - inset,
-                                /* bottom= */ (float) desiredHeight - inset);
+                                imageSize - image2inset / sqrt2,
+                                imageSize - image2inset / sqrt2,
+                                desiredWidth - image2inset,
+                                desiredHeight - image2inset);
                 break;
             case 3:
                 /*
-                 * +-------+
-                 * | | 0 | |
-                 * +-------+
-                 * | 1 | 2 |
-                 * +-------+
-                 *   i0
-                 *   |\
-                 * a | \ c
-                 *   --- i2
-                 *    b
-                 *
-                 * a = radius * squareRoot(3) due to the triangle being a 30-60-90 right
-                 * triangle. b =
-                 * radius of circle c = 2 * radius of circle
-                 *
-                 * All three of the images are circles and therefore image zero will not touch
-                 * image one
-                 * or image two. Move image zero down so it touches image one and image two. This
-                 * can be
-                 * done by keeping image zero in the center and moving it down slightly. The
-                 * amount to move
-                 * down can be calculated by solving a right triangle. We know that the center x
-                 * of image
-                 * two to the center x of image zero is the radius of the circle, this is the
-                 * length of edge
-                 * b. Also we know that the distance from image zero to image two's center is 2 *
-                 * radius,
-                 * edge c. From this we know that the distance from center y of image two to
-                 * center y of
-                 * image one, edge a, is equal to radius * squareRoot(3) due to this triangle
-                 * being a
-                 * 30-60-90 right triangle.
-                 */
-                float quarterWidth = (float) desiredWidth / 4F;
-                float threeQuarterWidth = 3 * quarterWidth;
-                float radius = cropToCircle ? (halfHeight - inset) / 2 : (float) desiredHeight / 4F;
-                float imageTwoCenterY = (float) desiredHeight - radius;
-                float lengthOfEdgeA = (float) (radius * Math.sqrt(3));
-                float imageZeroCenterY = imageTwoCenterY - lengthOfEdgeA;
-                float imageZeroTop = imageZeroCenterY - radius - 2 * inset;
-                float imageZeroBottom = imageZeroCenterY + radius - 2 * inset;
-                destArray[0] =
-                        new RectF(
-                                quarterWidth, imageZeroTop,
-                                threeQuarterWidth, imageZeroBottom);
-                destArray[1] =
-                        new RectF(
-                                inset,
-                                /* top= */ halfHeight - inset,
-                                halfWidth,
-                                /* bottom= */ (float) desiredHeight - 2 * inset);
-                destArray[2] =
-                        new RectF(
-                                halfWidth,
-                                /* top= */ halfHeight - inset,
-                                /* right= */ (float) desiredWidth - inset,
-                                /* bottom= */ (float) desiredHeight - 2 * inset);
+                * +-------+
+                * | | 0 | |
+                * +-------+
+                * | 1 | 2 |
+                * +-------+
+                * Note:Radius is meant as the half width/height of the surrounding rect of the
+                * area where the image can be drawn.
+                *
+                * R is the radius of the circle which fits into the desired size.
+                * r is the radius of the image.
+                * r=[2*sqrt(3)-3]*R
+                * The radius of the image areas (circle to rect) can be between [r, R]. We are
+                * approximating is linearly with the corner radius factor.
+                */
+                // rFactor in [0.5 .. (2F * (float) Math.sqrt(3F) - 3F)]
+                // -0.03589835f = (2F * (float) Math.sqrt(3F) - 3F) - 0.5F
+                float rFactor = -0.03589835f * cornerRadius + 0.5F;
+                imageSize = rFactor * outerRadius;
+
+                float left1 = desiredWidth / 2F - imageSize;
+                float right1 = desiredWidth / 2F + imageSize;
+                float sqrt3 = (float) Math.sqrt(3F);
+                float top2 = ((sqrt3 - 1F) * cornerRadius + 1F) * imageSize
+                        + (1F - cornerRadius) * imageSize;
+                float bottom2 = top2 + 2F * imageSize;
+
+                destArray[0] = new RectF(left1, 0F, right1, 2F * imageSize);
+                destArray[1] = new RectF(left1 - imageSize, top2, left1 + imageSize, bottom2);
+                destArray[2] = new RectF(
+                        right1 - imageSize, top2, right1 + imageSize, bottom2);
                 break;
             default:
                 /*
-                 * +-------+
-                 * | 0 | 1 |
-                 * +-------+
-                 * | 2 | 3 |
-                 * +-------+
-                 */
-                destArray[0] = new RectF(inset, inset, halfWidth, halfHeight);
+                * +-------+
+                * | 0 | 1 |
+                * +-------+
+                * | 2 | 3 |
+                * +-------+
+                *
+                * image4insest is a good approximation which scales between the radius and the
+                * hypotenuse of the image rect, which is "sqrt(0.5) * outerRadius". The factor
+                * 4.f is used to scale it a bit down.
+                */
+                float image4insest = cornerRadius * (float) Math.sqrt(0.5F) * outerRadius / 4F;
+                destArray[0] = new RectF(image4insest, image4insest, halfWidth, halfHeight);
                 destArray[1] =
                         new RectF(
                                 halfWidth,
-                                inset,
-                                /* right= */ (float) desiredWidth - inset,
+                                image4insest,
+                                desiredWidth - image4insest,
                                 halfHeight);
                 destArray[2] =
                         new RectF(
-                                inset,
+                                image4insest,
                                 halfHeight,
                                 halfWidth,
-                                /* bottom= */ (float) desiredHeight - inset);
+                                desiredHeight - image4insest);
                 destArray[3] =
                         new RectF(
                                 halfWidth,
                                 halfHeight,
-                                /* right= */ (float) desiredWidth - inset,
-                                /* bottom= */ (float) desiredHeight - inset);
+                                desiredWidth - image4insest,
+                                desiredHeight - image4insest);
                 break;
         }
         return destArray;
