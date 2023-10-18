@@ -18,6 +18,8 @@ package com.android.car.messenger.core.service;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -27,24 +29,32 @@ import android.content.Intent;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.android.car.messenger.impl.AppFactoryTestImpl;
+import com.android.car.messenger.impl.datamodels.TelephonyDataModel;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 @RunWith(AndroidJUnit4.class)
 public class OnBootReceiverTest {
 
     private Context mContext;
+    private AppFactoryTestImpl mAppFactory;
     @Captor
     private ArgumentCaptor<Intent> mCaptor;
+    @Mock
+    private TelephonyDataModel mDataModel;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         mContext = spy(ApplicationProvider.getApplicationContext());
+        doReturn(null).when(mContext).startService(any());
     }
 
     @Test

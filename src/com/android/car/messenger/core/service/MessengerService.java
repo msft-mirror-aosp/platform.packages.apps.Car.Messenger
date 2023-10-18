@@ -27,7 +27,6 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.media.AudioAttributes;
-import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -61,26 +60,8 @@ public class MessengerService extends Service {
     @NonNull public static final String APP_RUNNING_CHANNEL_ID = "APP_RUNNING_CHANNEL_ID";
     private static final int SERVICE_STARTED_NOTIFICATION_ID = Integer.MAX_VALUE;
 
-    /* Binding boilerplate */
-    @NonNull private final IBinder mBinder = new LocalBinder();
-
     /* Delay fetching to give time for the system to start up on boot */
     private static final Duration DELAY_FETCH_DURATION = Duration.ofSeconds(3);
-
-    /** Local Binder For {@link MessengerService} */
-    public class LocalBinder extends Binder {
-        /** Returns {@link MessengerService} */
-        @NonNull
-        public MessengerService getService() {
-            return MessengerService.this;
-        }
-    }
-
-    @Override
-    @NonNull
-    public IBinder onBind(@NonNull Intent intent) {
-        return mBinder;
-    }
 
     @Override
     public void onCreate() {
@@ -158,6 +139,12 @@ public class MessengerService extends Service {
     public void onDestroy() {
         super.onDestroy();
         L.d(TAG, "onDestroy");
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     @Override

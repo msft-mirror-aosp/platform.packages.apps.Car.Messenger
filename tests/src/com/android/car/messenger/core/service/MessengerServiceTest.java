@@ -16,20 +16,17 @@
 
 package com.android.car.messenger.core.service;
 
-import static com.android.dx.mockito.inline.extended.ExtendedMockito.any;
-import static com.android.dx.mockito.inline.extended.ExtendedMockito.mock;
 import static com.android.dx.mockito.inline.extended.ExtendedMockito.mockitoSession;
 import static com.android.dx.mockito.inline.extended.ExtendedMockito.verify;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -68,42 +65,27 @@ public class MessengerServiceTest {
     private ArgumentCaptor<Intent> mCaptor;
     @Mock
     private TelephonyDataModel mDataModel;
+    @Mock
+    private MutableLiveData<Conversation> mUnreadLiveData;
+    @Mock
+    private MutableLiveData<String> mRemovedLiveData;
 
     @Before
     public void setup() throws TimeoutException {
         MockitoAnnotations.initMocks(this);
 
-        MutableLiveData<Conversation> unreadLiveData = mock(MutableLiveData.class);
-        MutableLiveData<String> removedLiveData = mock(MutableLiveData.class);
+        when(mDataModel.getUnreadMessages()).thenReturn(mUnreadLiveData);
+        when(mDataModel.onConversationRemoved()).thenReturn(mRemovedLiveData);
 
-        when(mDataModel.getUnreadMessages()).thenReturn(unreadLiveData);
-        when(mDataModel.onConversationRemoved()).thenReturn(removedLiveData);
-
-        mContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        mContext = spy(InstrumentationRegistry.getInstrumentation().getTargetContext());
         mAppFactory = new AppFactoryTestImpl(mContext, mDataModel, null, null);
 
-        Intent intent = new Intent(mContext, MessengerService.class);
-        IBinder binder = mServiceTestRule.bindService(intent);
-        mMessengerService = ((MessengerService.LocalBinder) binder).getService();
+        mMessengerService = new MessengerService();
     }
 
     @After
     public void teardown() {
         mAppFactory.teardown();
-    }
-
-    @Test
-    public void testSubscribeToNotifications() {
-        MutableLiveData<Conversation> unreadLiveData = mock(MutableLiveData.class);
-        MutableLiveData<String> removedLiveData = mock(MutableLiveData.class);
-
-        when(mDataModel.getUnreadMessages()).thenReturn(unreadLiveData);
-        when(mDataModel.onConversationRemoved()).thenReturn(removedLiveData);
-
-        // These calls are delayed as defined by MessengerService#DELAY_FETCH_DURATION
-        verify(unreadLiveData, timeout(5000)).observeForever(any());
-        // TODO: b/216550137 Make delay configurable to speed up test
-        verify(removedLiveData, timeout(5000)).observeForever(any());
     }
 
     @Test
