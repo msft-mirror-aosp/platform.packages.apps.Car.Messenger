@@ -42,7 +42,7 @@ android_test {
         "androidx.test.ext.junit",
         "androidx.test.ext.truth",
         "mockito-target-extended-minus-junit4",
-        "truth-prebuilt",
+        "truth",
     ],
 
     instrumentation_for: "CarMessengerAppForTesting",
