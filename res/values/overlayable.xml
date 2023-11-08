@@ -117,6 +117,7 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="id" name="unread_badge"/>
       <item type="integer" name="config_letter_tile_text_style"/>
       <item type="integer" name="group_avatar_max_group_size"/>
+      <item type="integer" name="group_avatar_images_corner_radius"/>
       <item type="layout" name="conversation_list_item"/>
       <item type="layout" name="empty_view"/>
       <item type="layout" name="error_view"/>

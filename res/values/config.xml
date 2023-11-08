@@ -28,6 +28,12 @@
     where n is the value.
     -->
     <integer name="group_avatar_max_group_size">4</integer>
+    <!--
+    Roundness factor of a rounded rectangle to render avatar images into. A
+    value of 0 means, a square, a value of 100 means a circle. Values in between means how much
+    of the side of the rectangle is actually round.
+    -->
+    <integer name="group_avatar_images_corner_radius">100</integer>
 
     <integer name="config_letter_tile_text_style">0</integer>
 
