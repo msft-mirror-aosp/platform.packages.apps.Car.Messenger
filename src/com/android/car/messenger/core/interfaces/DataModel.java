@@ -21,6 +21,7 @@ import androidx.lifecycle.LiveData;
 
 import com.android.car.messenger.common.Conversation;
 import com.android.car.messenger.core.models.UserAccount;
+import com.android.car.messenger.impl.datamodels.util.CursorUtils;
 
 import java.util.Collection;
 
@@ -65,12 +66,12 @@ public interface DataModel {
     LiveData<String> onConversationRemoved();
 
     /**
-     * Returns an observable conversation item, holding only unread messages. since the last known
+     * Returns an observable conversation item, holding only unseen messages. since the last known
      * {@link UserAccount#getConnectionTime}.
      *
-     * <p>If no unread messages are found for the conversation id, the live data emits no data.
+     * <p>If no unseen messages are found for the conversation id, the live data emits no data.
      */
-    LiveData<Conversation> getUnreadMessages();
+    LiveData<Conversation> getUnseenMessages();
 
     /**
      * Called by UI to mute all notifications for this conversation
@@ -81,11 +82,19 @@ public interface DataModel {
     void muteConversation(@NonNull String conversationId, boolean mute);
 
     /**
-     * Called by UI to mark conversation as read
+     * Called by UI to mark a conversation as read
      *
      * @param conversationId The unique id for the conversation
      */
     void markAsRead(@NonNull String conversationId);
+
+    /**
+     * Called by UI to mark a message as seen
+     *
+     * @param messageId The unique id for the message
+     * @param type ContentType.MMS or ContentType.SMS
+     */
+    void markAsSeen(@NonNull String messageId, @NonNull CursorUtils.ContentType type);
 
     /**
      * Called by UI to reply to a conversation

@@ -66,7 +66,7 @@ public class MessengerServiceTest {
     @Mock
     private TelephonyDataModel mDataModel;
     @Mock
-    private MutableLiveData<Conversation> mUnreadLiveData;
+    private MutableLiveData<Conversation> mUnseenLiveData;
     @Mock
     private MutableLiveData<String> mRemovedLiveData;
 
@@ -74,7 +74,7 @@ public class MessengerServiceTest {
     public void setup() throws TimeoutException {
         MockitoAnnotations.initMocks(this);
 
-        when(mDataModel.getUnreadMessages()).thenReturn(mUnreadLiveData);
+        when(mDataModel.getUnseenMessages()).thenReturn(mUnseenLiveData);
         when(mDataModel.onConversationRemoved()).thenReturn(mRemovedLiveData);
 
         mContext = spy(InstrumentationRegistry.getInstrumentation().getTargetContext());

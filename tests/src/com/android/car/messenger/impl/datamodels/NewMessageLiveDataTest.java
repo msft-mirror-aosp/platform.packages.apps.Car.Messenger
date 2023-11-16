@@ -25,17 +25,15 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.Telephony;
 
 import androidx.core.app.Person;
@@ -50,11 +48,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.android.car.apps.common.testutils.InstantTaskExecutorRule;
 import com.android.car.messenger.common.Conversation;
 import com.android.car.messenger.core.models.UserAccount;
-import com.android.car.messenger.core.shared.MessageConstants;
 import com.android.car.messenger.core.ui.livedata.UserAccountLiveData;
 import com.android.car.messenger.core.util.CarStateListener;
 import com.android.car.messenger.impl.AppFactoryTestImpl;
 import com.android.car.messenger.impl.datamodels.util.ConversationFetchUtil;
+import com.android.car.messenger.impl.datamodels.util.CursorUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -71,7 +69,6 @@ import org.mockito.quality.Strictness;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
 public class NewMessageLiveDataTest {
@@ -101,17 +98,19 @@ public class NewMessageLiveDataTest {
     private UserAccountLiveData mMockUserAccountLiveData;
     @Mock
     private CarStateListener mMockCarStateListener;
+    @Mock
+    private TelephonyDataModel mDataModel;
     private ArrayList<UserAccount> mUserAccountList;
     @Captor
     private ArgumentCaptor<Uri> mUriCaptor;
-    @Captor
-    private ArgumentCaptor<String> mQueryCaptor;
+
+    private static final int MESSAGE_ID = 123;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         mContext = spy(ApplicationProvider.getApplicationContext());
-        mAppFactory = new AppFactoryTestImpl(mContext, null, null, mMockCarStateListener);
+        mAppFactory = new AppFactoryTestImpl(mContext, mDataModel, null, mMockCarStateListener);
 
         when(mMockUserAccount.getId()).thenReturn(USER_ACCOUNT_ID);
         when(mMockUserAccount.getConnectionTime()).thenReturn(Instant.ofEpochMilli(0));
@@ -128,7 +127,6 @@ public class NewMessageLiveDataTest {
                 .thenReturn(mMockCursor);
         when(mMockCursor.getColumnIndex(any())).thenReturn(0);
         when(mMockCursor.getString(anyInt())).thenReturn("0");
-        when(mMockCursor.moveToFirst()).thenReturn(true);
     }
 
     @After
@@ -160,7 +158,12 @@ public class NewMessageLiveDataTest {
 
     @Test
     @UiThreadTest
-    public void testOnDataChanged() {
+    public void testOnDataChanged_mms() {
+        // First check is for MMS, second is for SMS
+        when(mMockCursor.moveToFirst()).thenReturn(true, false);
+        // Mock retrieval of message id
+        when(mMockCursor.getInt(anyInt())).thenReturn(MESSAGE_ID);
+
         MockitoSession session = mockitoSession().strictness(Strictness.LENIENT)
                 .spyStatic(ConversationFetchUtil.class)
                 .spyStatic(UserAccountLiveData.class)
@@ -178,6 +181,44 @@ public class NewMessageLiveDataTest {
             assertThat(mNewMessageLiveData.getValue()).isNull();
             mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START);
             assertThat(mNewMessageLiveData.getValue()).isEqualTo(conversation);
+
+            verify(mDataModel, never())
+                    .markAsSeen(String.valueOf(MESSAGE_ID), CursorUtils.ContentType.SMS);
+            verify(mDataModel).markAsSeen(String.valueOf(MESSAGE_ID), CursorUtils.ContentType.MMS);
+        } finally {
+            session.finishMocking();
+        }
+    }
+
+    @Test
+    @UiThreadTest
+    public void testOnDataChanged_sms() {
+        // First check is for MMS, second is for SMS
+        when(mMockCursor.moveToFirst()).thenReturn(false, true);
+        // Mock retrieval of message id
+        when(mMockCursor.getInt(anyInt())).thenReturn(MESSAGE_ID);
+
+        MockitoSession session = mockitoSession().strictness(Strictness.LENIENT)
+                .spyStatic(ConversationFetchUtil.class)
+                .spyStatic(UserAccountLiveData.class)
+                .startMocking();
+        try {
+            Conversation conversation = new Conversation.Builder(
+                    new Person.Builder().build(), /* conversationId= */ "0").build();
+            doReturn(conversation).when(() -> ConversationFetchUtil.fetchConversation(any()));
+            doReturn(mMockUserAccountLiveData).when(() -> UserAccountLiveData.getInstance());
+
+            mNewMessageLiveData = new NewMessageLiveData();
+            mNewMessageLiveData.mUserAccounts = mUserAccountList;
+            mNewMessageLiveData.observe(mMockLifecycleOwner,
+                    (value) -> mMockObserver.onChanged(value));
+            assertThat(mNewMessageLiveData.getValue()).isNull();
+            mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START);
+            assertThat(mNewMessageLiveData.getValue()).isEqualTo(conversation);
+
+            verify(mDataModel, never())
+                    .markAsSeen(String.valueOf(MESSAGE_ID), CursorUtils.ContentType.MMS);
+            verify(mDataModel).markAsSeen(String.valueOf(MESSAGE_ID), CursorUtils.ContentType.SMS);
         } finally {
             session.finishMocking();
         }
@@ -198,74 +239,6 @@ public class NewMessageLiveDataTest {
             assertThat(mNewMessageLiveData.getValue()).isNull();
             mNewMessageLiveData.onDataChange();
             assertThat(mNewMessageLiveData.getValue()).isNull();
-        } finally {
-            session.finishMocking();
-        }
-    }
-
-    @Test
-    public void testOffset_map() {
-        Bundle bundle = new Bundle();
-        Conversation.Message message = new Conversation.Message(
-                /* text= */ "", /* timestamp= */ 800, /* person= */ null);
-        Conversation conversation = new Conversation.Builder(
-                new Person.Builder().build(), /* conversationId= */ "0")
-                .setMessages(List.of(message))
-                .setExtras(bundle)
-                .build();
-
-        MockitoSession session = mockitoSession().strictness(Strictness.LENIENT)
-                .spyStatic(ConversationFetchUtil.class)
-                .spyStatic(UserAccountLiveData.class)
-                .startMocking();
-        try {
-            doReturn(conversation).when(() -> ConversationFetchUtil.fetchConversation(any()));
-            doReturn(mMockUserAccountLiveData).when(() -> UserAccountLiveData.getInstance());
-
-            mNewMessageLiveData = new NewMessageLiveData();
-            mNewMessageLiveData.mUserAccounts = mUserAccountList;
-            mNewMessageLiveData.mOffsetMap.clear();
-
-            when(mMockUserAccount.getConnectionTime()).thenReturn(Instant.ofEpochMilli(200));
-
-            // Adding last reply timestamp (500) that is less than existing entry timestamp (800).
-            bundle.putLong(MessageConstants.LAST_REPLY_TIMESTAMP_EXTRA, 500);
-            mNewMessageLiveData.onDataChange();
-            assertThat(mNewMessageLiveData.mOffsetMap).containsEntry(
-                    USER_ACCOUNT_ID, Instant.ofEpochMilli(800));
-
-            // Adding last reply timestamp (900) that is larger than existing entry timestamp (800).
-            bundle.putLong(MessageConstants.LAST_REPLY_TIMESTAMP_EXTRA, 900);
-            mNewMessageLiveData.onDataChange();
-            assertThat(mNewMessageLiveData.mOffsetMap).containsEntry(
-                    USER_ACCOUNT_ID, Instant.ofEpochMilli(900));
-        } finally {
-            session.finishMocking();
-        }
-    }
-
-    @Test
-    public void testOffset_query() {
-        MockitoSession session = mockitoSession().strictness(Strictness.LENIENT)
-                .spyStatic(ConversationFetchUtil.class)
-                .spyStatic(UserAccountLiveData.class)
-                .startMocking();
-        try {
-            Conversation conversation = new Conversation.Builder(
-                    new Person.Builder().build(), /* conversationId= */ "0").build();
-            doReturn(conversation).when(() -> ConversationFetchUtil.fetchConversation(any()));
-            doReturn(mMockUserAccountLiveData).when(() -> UserAccountLiveData.getInstance());
-
-            mNewMessageLiveData = new NewMessageLiveData();
-            mNewMessageLiveData.getMmsCursor(mMockUserAccount, Instant.ofEpochMilli(5000));
-            verify(mMockContentResolver).query(
-                    any(), any(), mQueryCaptor.capture(), isNull(), any());
-            assertThat(mQueryCaptor.getValue()).contains("date > 5 AND");
-
-            mNewMessageLiveData.getSmsCursor(mMockUserAccount, Instant.ofEpochMilli(5000));
-            verify(mMockContentResolver, times(2)).query(
-                    any(), any(), mQueryCaptor.capture(), isNull(), any());
-            assertThat(mQueryCaptor.getValue()).contains("date > 5000 AND");
         } finally {
             session.finishMocking();
         }

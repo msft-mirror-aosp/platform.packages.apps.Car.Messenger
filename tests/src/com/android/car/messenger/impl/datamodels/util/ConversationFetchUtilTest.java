@@ -18,6 +18,7 @@ package com.android.car.messenger.impl.datamodels.util;
 
 import static com.android.dx.mockito.inline.extended.ExtendedMockito.doReturn;
 import static com.android.dx.mockito.inline.extended.ExtendedMockito.mockitoSession;
+
 import static com.google.common.truth.Truth.assertThat;
 
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -173,8 +174,8 @@ public class ConversationFetchUtilTest {
         doReturn(Arrays.asList(person)).when(
                 () -> ContactUtils.getRecipients(anyString(), any()));
         doReturn(null).when(() -> CursorUtils.getMessagesCursor(
-                anyString(), anyInt(), eq(0L), eq(CursorUtils.ContentType.MMS)));
+                anyString(), anyInt(), eq(CursorUtils.ContentType.MMS)));
         doReturn(null).when(() -> CursorUtils.getMessagesCursor(
-                anyString(), anyInt(), eq(0L), eq(CursorUtils.ContentType.SMS)));
+                anyString(), anyInt(), eq(CursorUtils.ContentType.SMS)));
     }
 }

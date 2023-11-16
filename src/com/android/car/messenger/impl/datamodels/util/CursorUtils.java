@@ -61,9 +61,8 @@ public class CursorUtils {
     @NonNull
     public static final String DEFAULT_SORT_ORDER = Telephony.TextBasedSmsColumns.DATE + " DESC";
 
-    private static final String MMS_QUERY =
-            CONTENT_TYPE + " = '" + MMS_CONTENT_TYPE + "' AND " + DATE + " > ";
-    private static final String SMS_QUERY = CONTENT_TYPE + " IS NULL AND " + DATE + " > ";
+    private static final String MMS_QUERY = CONTENT_TYPE + " = '" + MMS_CONTENT_TYPE + "' ";
+    private static final String SMS_QUERY = CONTENT_TYPE + " IS NULL ";
 
     /** This enum is used for describing the type of message being fetched by a cursor */
     public enum ContentType {
@@ -91,17 +90,14 @@ public class CursorUtils {
      *
      * @param conversationId The conversation or thread id for the conversation
      * @param limit The maximum number of message rows to fetch
-     * @param offset The starting point in timestamp in millisecond to fetch for data
      */
     @Nullable
-    public static Cursor getMessagesCursor(@NonNull String conversationId, int limit, long offset,
+    public static Cursor getMessagesCursor(@NonNull String conversationId, int limit,
             @NonNull ContentType contentType) {
         Context context = AppFactory.get().getContext();
         ContentResolver contentResolver = context.getContentResolver();
 
-        String query = contentType == ContentType.MMS
-                ? MMS_QUERY + offset / 1000
-                : SMS_QUERY + offset;
+        String query = contentType == ContentType.MMS ? MMS_QUERY : SMS_QUERY;
 
         return contentResolver.query(
                 getConversationUri(conversationId),
@@ -109,6 +105,16 @@ public class CursorUtils {
                 query,
                 /* selectionArgs= */ null,
                 DEFAULT_SORT_ORDER + " LIMIT " + limit);
+    }
+
+    /** Gets the Uri for the message with specified messageId */
+    @NonNull
+    public static Uri getMessagesUri(@NonNull String messageId, @NonNull ContentType contentType) {
+        Uri uri = contentType == ContentType.MMS
+                ? Telephony.Mms.Inbox.CONTENT_URI
+                : Telephony.Sms.Inbox.CONTENT_URI;
+
+        return uri.buildUpon().appendPath(messageId).build();
     }
 
     /** Gets the Conversation Uri for the Conversation with specified conversationId */

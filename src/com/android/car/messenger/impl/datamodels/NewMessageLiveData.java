@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.provider.Telephony;
 
 import androidx.annotation.NonNull;
@@ -32,18 +33,15 @@ import androidx.annotation.VisibleForTesting;
 import com.android.car.apps.common.log.L;
 import com.android.car.messenger.common.Conversation;
 import com.android.car.messenger.core.interfaces.AppFactory;
+import com.android.car.messenger.core.interfaces.DataModel;
 import com.android.car.messenger.core.models.UserAccount;
 import com.android.car.messenger.core.shared.MessageConstants;
 import com.android.car.messenger.core.ui.livedata.UserAccountLiveData;
 import com.android.car.messenger.core.util.CarStateListener;
-import com.android.car.messenger.core.util.ConversationUtil;
+import com.android.car.messenger.impl.datamodels.util.CursorUtils;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Objects;
 
 /**
  * Publishes a stream of {@link Conversation} with unread messages that was received on the user
@@ -52,6 +50,7 @@ import java.util.Objects;
 public class NewMessageLiveData extends ContentProviderLiveData<Conversation> {
     private static final String TAG = "CM.NewMessageLiveData";
 
+    private final DataModel mDataModel;
     @NonNull
     private final UserAccountLiveData mUserAccountLiveData = UserAccountLiveData.getInstance();
 
@@ -59,34 +58,25 @@ public class NewMessageLiveData extends ContentProviderLiveData<Conversation> {
     @NonNull
     Collection<UserAccount> mUserAccounts = new ArrayList<>();
 
-    @VisibleForTesting
-    @NonNull
-    final HashMap<Integer, Instant> mOffsetMap = new HashMap<>();
-
     @NonNull
     private static final String MESSAGE_QUERY =
-            Telephony.TextBasedSmsColumns.DATE
-                    + " > %d AND "
-                    + Telephony.TextBasedSmsColumns.SUBSCRIPTION_ID
-                    + " = %d";
+            Telephony.TextBasedSmsColumns.SUBSCRIPTION_ID
+                    + " = ? AND "
+                    + Telephony.TextBasedSmsColumns.SEEN
+                    + " = 0";
 
     @NonNull
     private final CarStateListener mCarStateListener = AppFactory.get().getCarStateListener();
 
     NewMessageLiveData() {
         super(Telephony.MmsSms.CONTENT_URI);
+        mDataModel = AppFactory.get().getDataModel();
     }
 
     @Override
     protected void onActive() {
         super.onActive();
-        addSource(
-                mUserAccountLiveData,
-                it -> {
-                    mUserAccounts = it.getAccounts();
-                    it.getRemovedAccounts()
-                            .forEach(userAccount -> mOffsetMap.remove(userAccount.getId()));
-                });
+        addSource(mUserAccountLiveData, it -> mUserAccounts = it.getAccounts());
         if (getValue() == null) {
             onDataChange();
         }
@@ -97,7 +87,6 @@ public class NewMessageLiveData extends ContentProviderLiveData<Conversation> {
         super.onInactive();
         removeSource(mUserAccountLiveData);
         mUserAccounts.clear();
-        mOffsetMap.clear();
     }
 
     @Override
@@ -107,18 +96,23 @@ public class NewMessageLiveData extends ContentProviderLiveData<Conversation> {
             if (hasProjectionInForeground(userAccount)) {
                 continue;
             }
-            Instant offset =
-                    Objects.requireNonNull(
-                            mOffsetMap.getOrDefault(
-                                    userAccount.getId(), userAccount.getConnectionTime()));
-            Cursor mmsCursor = getMmsCursor(userAccount, offset);
+            Cursor mmsCursor = getMmsCursor(userAccount);
             boolean foundNewMms = postNewMessageIfFound(mmsCursor, userAccount);
-            Cursor smsCursor = getSmsCursor(userAccount, offset);
+            if (foundNewMms) {
+                L.d(TAG, "found new MMS");
+                String messageId =
+                        String.valueOf(mmsCursor.getInt(mmsCursor.getColumnIndex(BaseColumns._ID)));
+                mDataModel.markAsSeen(messageId, CursorUtils.ContentType.MMS);
+                break;
+            }
+
+            Cursor smsCursor = getSmsCursor(userAccount);
             boolean foundNewSms = postNewMessageIfFound(smsCursor, userAccount);
-            if (foundNewMms || foundNewSms) {
-                // onDataChange is called per one message insert,
-                // so once a new message is found we can exit early
-                L.d(TAG, foundNewMms ? "found new MMS" : "found new SMS");
+            if (foundNewSms) {
+                L.d(TAG, "found new SMS");
+                String messageId =
+                        String.valueOf(smsCursor.getInt(smsCursor.getColumnIndex(BaseColumns._ID)));
+                mDataModel.markAsSeen(messageId, CursorUtils.ContentType.SMS);
                 break;
             }
         }
@@ -141,9 +135,6 @@ public class NewMessageLiveData extends ContentProviderLiveData<Conversation> {
             return false;
         }
         conversation.getExtras().putInt(MessageConstants.EXTRA_ACCOUNT_ID, userAccount.getId());
-        Instant offset =
-                Instant.ofEpochMilli(ConversationUtil.getConversationTimestamp(conversation));
-        mOffsetMap.put(userAccount.getId(), offset);
         postValue(conversation);
         return true;
     }
@@ -151,27 +142,27 @@ public class NewMessageLiveData extends ContentProviderLiveData<Conversation> {
     /** Get the last message cursor, taking into account the last message posted */
     @Nullable
     @VisibleForTesting
-    Cursor getMmsCursor(@NonNull UserAccount userAccount, @NonNull Instant offset) {
-        return getCursor(Telephony.Mms.Inbox.CONTENT_URI, userAccount, offset.getEpochSecond());
+    Cursor getMmsCursor(@NonNull UserAccount userAccount) {
+        return getCursor(Telephony.Mms.Inbox.CONTENT_URI, userAccount);
     }
 
     /** Get the last message cursor, taking into account the last message posted */
     @Nullable
     @VisibleForTesting
-    Cursor getSmsCursor(@NonNull UserAccount userAccount, @NonNull Instant offset) {
-        return getCursor(Telephony.Sms.Inbox.CONTENT_URI, userAccount, offset.toEpochMilli());
+    Cursor getSmsCursor(@NonNull UserAccount userAccount) {
+        return getCursor(Telephony.Sms.Inbox.CONTENT_URI, userAccount);
     }
-    /** Get the last message cursor, taking into account an offset and subscription id */
+
+    /** Get the last message cursor of the subscription id */
     @Nullable
-    private Cursor getCursor(Uri uri, @NonNull UserAccount userAccount, long offset) {
+    private Cursor getCursor(Uri uri, @NonNull UserAccount userAccount) {
         Context context = AppFactory.get().getContext();
-        String query = String.format(Locale.ENGLISH, MESSAGE_QUERY, offset, userAccount.getId());
         return context.getContentResolver()
                 .query(
                         uri,
-                        new String[] {Telephony.TextBasedSmsColumns.THREAD_ID},
-                        query,
-                        /* selectionArgs= */ null,
+                        new String[] {BaseColumns._ID, Telephony.TextBasedSmsColumns.THREAD_ID},
+                        MESSAGE_QUERY,
+                        new String[] {String.valueOf(userAccount.getId())},
                         DEFAULT_SORT_ORDER + " LIMIT 1");
     }
 

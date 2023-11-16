@@ -165,11 +165,11 @@ public class ConversationFetchUtil {
 
     private static Cursor getMmsCursor(@NonNull String conversationId) {
         return CursorUtils.getMessagesCursor(
-                conversationId, MESSAGE_LIMIT, /* offset= */ 0, CursorUtils.ContentType.MMS);
+                conversationId, MESSAGE_LIMIT, CursorUtils.ContentType.MMS);
     }
 
     private static Cursor getSmsCursor(@NonNull String conversationId) {
         return CursorUtils.getMessagesCursor(
-                conversationId, MESSAGE_LIMIT, /* offset= */ 0, CursorUtils.ContentType.SMS);
+                conversationId, MESSAGE_LIMIT, CursorUtils.ContentType.SMS);
     }
 }

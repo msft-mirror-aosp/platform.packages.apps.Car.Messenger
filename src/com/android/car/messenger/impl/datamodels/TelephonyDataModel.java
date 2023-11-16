@@ -67,7 +67,7 @@ public class TelephonyDataModel implements DataModel {
 
     @NonNull
     @Override
-    public LiveData<Conversation> getUnreadMessages() {
+    public LiveData<Conversation> getUnseenMessages() {
         return new NewMessageLiveData();
     }
 
@@ -94,6 +94,16 @@ public class TelephonyDataModel implements DataModel {
         values.put(Telephony.ThreadsColumns.READ, 1);
         context.getContentResolver()
                 .update(CursorUtils.getConversationUri(conversationId), values, /* extras= */ null);
+    }
+
+    @Override
+    public void markAsSeen(@NonNull String messageId, @NonNull CursorUtils.ContentType type) {
+        L.d(TAG, "markAsSeen for messageId: %s in %s", messageId, type);
+        Context context = AppFactory.get().getContext();
+        ContentValues values = new ContentValues();
+        values.put(Telephony.TextBasedSmsColumns.SEEN, 1);
+        context.getContentResolver()
+                .update(CursorUtils.getMessagesUri(messageId, type), values, /* extras= */ null);
     }
 
     @Override
