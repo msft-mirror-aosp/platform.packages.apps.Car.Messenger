@@ -152,7 +152,7 @@ public class LoadingFrameLayout extends FrameLayout {
 
     private void switchTo(@State int state) {
         if (mState != state) {
-            ViewUtils.setVisible((View) findViewById(R.id.list_view), state == State.CONTENT);
+            ViewUtils.setVisible((View) findViewById(R.id.list_focus_area), state == State.CONTENT);
             mLoadingView.setVisibilityFromState(state);
             mErrorView.setVisibilityFromState(state);
             mEmptyView.setVisibilityFromState(state);

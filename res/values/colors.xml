@@ -51,19 +51,6 @@
     <color name="uxr_button_text_color">@color/primary_text_color</color>
     <color name="uxr_button_text_disabled_color">#80FFFFFF</color>
 
-    <color name="hero_button_background_color">@color/car_grey_868</color>
-    <color name="hero_button_text_color">@color/uxr_button_text_color_selector</color>
-
-    <!--
-        Color palette for cars.
-        Those values are NOT part of the car-ui-lib "resource API", they are just constants used in
-        various places to give a default value to the attributes of the "api".
-     -->
-    <color name="car_grey_868">#ff282a2d</color>
-    <color name="car_grey_50">#fff8f9fa</color>
-
-    <color name="car_red_500a">#ffd50000</color>
-
     <color name="group_avatar_stroke_color">@android:color/transparent</color>
     <color name="group_avatar_background_color">@android:color/transparent</color>
 </resources>

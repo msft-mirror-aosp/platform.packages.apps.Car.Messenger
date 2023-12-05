@@ -55,7 +55,7 @@ public class ConversationItemViewHolder extends RecyclerView.ViewHolder {
     @NonNull private final TextView mDotSeparatorView;
     @NonNull private final ImageView mSubtitleIconView;
     @NonNull private final ImageView mMuteActionButton;
-    @NonNull private final View mReplyActionButton;
+    @NonNull private final ImageView mReplyActionButton;
     @NonNull private final View mPlayActionButton;
     @NonNull private final TextView mUnreadBadge;
     @NonNull private final DateTimeView mDateTimeView;
