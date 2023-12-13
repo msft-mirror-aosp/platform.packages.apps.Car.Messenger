@@ -135,7 +135,7 @@ public class VoiceUtil {
 
     /** Requests Voice request to start a generic compose voice interaction */
     public static void voiceRequestGenericCompose(Activity activity, UserAccount userAccount) {
-        L.i(TAG, "compose sms from user: " + userAccount.getIccId());
+        L.i(TAG, "compose sms from subId: " + userAccount.getId());
         Bundle bundle = new Bundle();
         bundle.putString(KEY_ACTION, VOICE_ACTION_SEND_SMS);
         bundle.putString(KEY_DEVICE_ADDRESS, userAccount.getIccId());
@@ -218,7 +218,8 @@ public class VoiceUtil {
         int requestCode =
                 (conversationKey == null) ? action.hashCode() : conversationKey.hashCode();
         return PendingIntent.getForegroundService(
-                context, requestCode, intent, PendingIntent.FLAG_MUTABLE);
+                context, requestCode, intent,
+                PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /** Sends a reply, meant to be used from a caller originating from voice input. */

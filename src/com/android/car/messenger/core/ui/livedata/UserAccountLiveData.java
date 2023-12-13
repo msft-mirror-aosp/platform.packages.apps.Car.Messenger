@@ -118,6 +118,7 @@ public class UserAccountLiveData extends LiveData<UserAccountChangeList> {
                                             it.getDisplayName() != null
                                                     ? it.getDisplayName().toString()
                                                     : "";
+                                    L.d(TAG, "Found user account subId " + subscriptionId);
                                     return new UserAccount(
                                             subscriptionId, displayName, iccId, Instant.now());
                                 })

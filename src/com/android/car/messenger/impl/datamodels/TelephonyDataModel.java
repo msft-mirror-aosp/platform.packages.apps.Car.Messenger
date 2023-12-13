@@ -113,7 +113,7 @@ public class TelephonyDataModel implements DataModel {
             L.e(TAG, "Invalid user account id when replying conversation, dropping message");
             return;
         }
-        L.d(TAG, "Sending a message to a conversation");
+        L.d(TAG, "Sending a message to subId: " + accountId + "convId: " + conversationId);
         String destination =
                 Uri.withAppendedPath(Telephony.Threads.CONTENT_URI, conversationId).toString();
         SmsManager.getSmsManagerForSubscriptionId(accountId)
@@ -127,7 +127,7 @@ public class TelephonyDataModel implements DataModel {
 
     @Override
     public void sendMessage(int accountId, @NonNull String phoneNumber, @NonNull String message) {
-        L.d(TAG, "Sending a message to a phone number");
+        L.d(TAG, "Sending a message via phone number with subId: " + accountId);
         SmsManager.getSmsManagerForSubscriptionId(accountId)
                 .sendTextMessage(
                         phoneNumber,
