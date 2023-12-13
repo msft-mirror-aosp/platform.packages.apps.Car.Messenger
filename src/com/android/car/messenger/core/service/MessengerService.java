@@ -58,6 +58,7 @@ public class MessengerService extends Service {
     @NonNull public static final String MESSAGE_CHANNEL_ID = "MESSAGE_CHANNEL_ID";
     @NonNull public static final String SILENT_MESSAGE_CHANNEL_ID = "SILENT_MESSAGE_CHANNEL_ID";
     @NonNull public static final String APP_RUNNING_CHANNEL_ID = "APP_RUNNING_CHANNEL_ID";
+    @NonNull public static final String ERROR_CHANNEL_ID = "ERROR_CHANNEL_ID";
     private static final int SERVICE_STARTED_NOTIFICATION_ID = Integer.MAX_VALUE;
 
     /* Delay fetching to give time for the system to start up on boot */
@@ -75,7 +76,10 @@ public class MessengerService extends Service {
 
     private void subscribeToNotificationUpdates() {
         DataModel dataModel = AppFactory.get().getDataModel();
-        dataModel.getUnseenMessages().observeForever(NotificationHandler::postNotification);
+        dataModel.getUnseenMessages().observeForever((conversation) -> {
+            NotificationHandler.postNotification(conversation);
+            NotificationHandler.postTimestampDesyncNotification(conversation);
+        });
         dataModel.onConversationRemoved().observeForever(NotificationHandler::removeNotification);
     }
 
@@ -88,40 +92,42 @@ public class MessengerService extends Service {
         }
 
         // Create notification channel for app running notification
-        {
-            NotificationChannel appRunningNotificationChannel =
-                    new NotificationChannel(
-                            APP_RUNNING_CHANNEL_ID,
-                            getString(R.string.app_running_msg_notification_title),
-                            NotificationManager.IMPORTANCE_LOW);
-            notificationManager.createNotificationChannel(appRunningNotificationChannel);
-        }
+        NotificationChannel appRunningNotificationChannel =
+                new NotificationChannel(
+                        APP_RUNNING_CHANNEL_ID,
+                        getString(R.string.app_running_msg_notification_title),
+                        NotificationManager.IMPORTANCE_LOW);
+        notificationManager.createNotificationChannel(appRunningNotificationChannel);
 
         // Create notification channel for notifications that should be posted silently in the
         // notification center, without a heads up notification.
-        {
-            NotificationChannel silentNotificationChannel =
-                    new NotificationChannel(
-                            SILENT_MESSAGE_CHANNEL_ID,
-                            getString(R.string.message_channel_description),
-                            NotificationManager.IMPORTANCE_LOW);
-            notificationManager.createNotificationChannel(silentNotificationChannel);
-        }
+        NotificationChannel silentNotificationChannel =
+                new NotificationChannel(
+                        SILENT_MESSAGE_CHANNEL_ID,
+                        getString(R.string.message_channel_description),
+                        NotificationManager.IMPORTANCE_LOW);
+        notificationManager.createNotificationChannel(silentNotificationChannel);
 
-        {
-            AudioAttributes attributes =
-                    new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                            .build();
-            NotificationChannel channel =
-                    new NotificationChannel(
-                            MESSAGE_CHANNEL_ID,
-                            getString(R.string.message_channel_name),
-                            NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription(getString(R.string.message_channel_description));
-            channel.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, attributes);
-            notificationManager.createNotificationChannel(channel);
-        }
+        // Notification channel for error messages
+        NotificationChannel errorNotificationChannel =
+                new NotificationChannel(
+                        ERROR_CHANNEL_ID,
+                        getString(R.string.error_channel_description),
+                        NotificationManager.IMPORTANCE_HIGH);
+        notificationManager.createNotificationChannel(errorNotificationChannel);
+
+        AudioAttributes attributes =
+                new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                        .build();
+        NotificationChannel channel =
+                new NotificationChannel(
+                        MESSAGE_CHANNEL_ID,
+                        getString(R.string.message_channel_name),
+                        NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription(getString(R.string.message_channel_description));
+        channel.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, attributes);
+        notificationManager.createNotificationChannel(channel);
 
         final Notification notification =
                 new NotificationCompat.Builder(this, APP_RUNNING_CHANNEL_ID)

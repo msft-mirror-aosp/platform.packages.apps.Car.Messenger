@@ -22,6 +22,7 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="attr" name="progressViewLayout"/>
       <item type="bool" name="direct_reply_supported"/>
       <item type="bool" name="direct_send_supported"/>
+      <item type="bool" name="enable_time_desync_reminder"/>
       <item type="bool" name="filter_local_sim"/>
       <item type="bool" name="group_avatar_fill_background"/>
       <item type="bool" name="ttr_conversation_supported"/>
@@ -95,6 +96,7 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="id" name="guideline_end"/>
       <item type="id" name="icon"/>
       <item type="id" name="last_action_icon_view"/>
+      <item type="id" name="list_focus_area"/>
       <item type="id" name="list_view"/>
       <item type="id" name="loading_frame_layout"/>
       <item type="id" name="mute_action_button"/>
@@ -110,6 +112,7 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="integer" name="config_letter_tile_text_style"/>
       <item type="integer" name="group_avatar_images_corner_radius"/>
       <item type="integer" name="group_avatar_max_group_size"/>
+      <item type="integer" name="time_desync_reminder_interval_mins"/>
       <item type="layout" name="conversation_list_item"/>
       <item type="layout" name="empty_view"/>
       <item type="layout" name="error_view"/>
@@ -149,6 +152,7 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="string" name="duration_years_relative_future"/>
       <item type="string" name="duration_years_shortest"/>
       <item type="string" name="duration_years_shortest_future"/>
+      <item type="string" name="error_channel_description"/>
       <item type="string" name="message_channel_description"/>
       <item type="string" name="message_channel_name"/>
       <item type="string" name="message_overflow"/>
@@ -158,6 +162,8 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="string" name="participant_overflow_text"/>
       <item type="string" name="replied"/>
       <item type="string" name="tap_to_read_aloud"/>
+      <item type="string" name="time_desync_error_text"/>
+      <item type="string" name="time_desync_error_title"/>
       <item type="style" name="LoadingInfoActionButtonStyle"/>
       <item type="style" name="LoadingInfoMessageStyle"/>
       <item type="style" name="LoadingInfoSecondaryMessageStyle"/>

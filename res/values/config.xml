@@ -20,6 +20,9 @@
     <bool name="direct_reply_supported">true</bool>
     <bool name="ttr_conversation_supported">true</bool>
     <bool name="filter_local_sim">true</bool>
+    <bool name="enable_time_desync_reminder">true</bool>
+
+    <integer name="time_desync_reminder_interval_mins">120</integer>
 
     <!--
     A number between 1 and 4 is required.

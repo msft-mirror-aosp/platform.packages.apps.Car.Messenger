@@ -17,16 +17,20 @@
 package com.android.car.messenger.core.shared;
 
 import static com.android.car.messenger.core.shared.MessageConstants.EXTRA_ACCOUNT_ID;
+import static com.android.car.messenger.core.shared.MessageConstants.LAST_REPLY_TIMESTAMP_EXTRA;
 
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.service.notification.StatusBarNotification;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import com.android.car.apps.common.log.L;
 import com.android.car.assist.payloadhandlers.ConversationPayloadHandler;
@@ -35,7 +39,10 @@ import com.android.car.messenger.common.Conversation;
 import com.android.car.messenger.core.interfaces.AppFactory;
 import com.android.car.messenger.core.service.MessengerService;
 import com.android.car.messenger.core.ui.launcher.MessageLauncherActivity;
+import com.android.car.messenger.core.util.ConversationUtil;
 import com.android.car.messenger.core.util.VoiceUtil;
+
+import java.util.Calendar;
 
 /** Useful notification handler for posting messages */
 public class NotificationHandler {
@@ -46,6 +53,11 @@ public class NotificationHandler {
             "com.android.car.messenger.TAP_TO_READ";
 
     private static final int TAP_TO_READ_SBN_ATTEMPT_LIMIT = 3;
+
+    @VisibleForTesting
+    static final int TIME_DESYNC_NOTIFICATION_ID = 1337;
+    private static final String DATE_SETTINGS_INTENT_ACTION = "android.settings.DATE_SETTINGS";
+    private static final long TIME_SYNC_MARGIN_MILLIS = 60 * 1000;
 
     private NotificationHandler() {}
 
@@ -73,6 +85,59 @@ public class NotificationHandler {
                         context, channelId, tapToReadConversation, R.drawable.ic_message, null);
         notification.contentIntent = createContentIntent();
         notificationManager.notify(tapToReadConversation.getId().hashCode(), notification);
+    }
+
+    /**
+     * Notifies the user that there is a time desync between the car and paired phone.
+     *
+     * The incoming message's timestamp is considered truth as it comes from the phone. We can
+     * compare it to the local time to see if we are in the future or past.
+     *
+     * Replies from the car will always use the (possibly incorrect) local time, resulting in
+     * misordering of messages in the conversation. See b/288895550.
+     */
+    public static void postTimestampDesyncNotification(Conversation conversation) {
+        Context context = AppFactory.get().getContext();
+        Resources res = context.getResources();
+
+        if (!res.getBoolean(R.bool.enable_time_desync_reminder)) {
+            L.d(TAG, "desync notification disabled");
+            return;
+        }
+
+        SharedPreferences prefs = AppFactory.get().getSharedPreferences();
+
+        long localTimestamp = Calendar.getInstance().getTimeInMillis();
+        long incomingTimestamp = ConversationUtil.getConversationTimestamp(conversation);
+        long storedTimestamp = prefs.getLong(LAST_REPLY_TIMESTAMP_EXTRA, 0);
+        long reminderIntervalMillis =
+                res.getInteger(R.integer.time_desync_reminder_interval_mins) * 60000L;
+
+        boolean isDesynced = Math.abs(localTimestamp - incomingTimestamp) > TIME_SYNC_MARGIN_MILLIS;
+
+        // Occasionally post the notification so we don't spam the user.
+        if (isDesynced && incomingTimestamp - storedTimestamp > reminderIntervalMillis) {
+            prefs.edit().putLong(LAST_REPLY_TIMESTAMP_EXTRA, incomingTimestamp).apply();
+
+            L.d(TAG, "posting desync notification");
+
+            NotificationManager notificationManager =
+                    context.getSystemService(NotificationManager.class);
+            Intent launchIntent = new Intent();
+            launchIntent.setAction(DATE_SETTINGS_INTENT_ACTION);
+            launchIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            PendingIntent settingsIntent = PendingIntent.getActivity(
+                    context, 0, launchIntent, PendingIntent.FLAG_IMMUTABLE);
+            Notification notification =
+                    new Notification.Builder(context, MessengerService.ERROR_CHANNEL_ID)
+                            .setSmallIcon(R.drawable.ic_message)
+                            .setContentTitle(context.getString(R.string.time_desync_error_title))
+                            .setContentText(context.getString(R.string.time_desync_error_text))
+                            .setContentIntent(settingsIntent)
+                            .setAutoCancel(true)
+                            .build();
+            notificationManager.notify(TIME_DESYNC_NOTIFICATION_ID, notification);
+        }
     }
 
     private static PendingIntent createContentIntent() {
