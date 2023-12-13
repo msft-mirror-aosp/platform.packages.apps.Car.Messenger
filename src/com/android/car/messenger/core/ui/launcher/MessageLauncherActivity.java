@@ -16,6 +16,7 @@
 
 package com.android.car.messenger.core.ui.launcher;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.car.apps.common.log.L;
 import com.android.car.messenger.core.interfaces.AppFactory;
 import com.android.car.messenger.core.models.UserAccount;
+import com.android.car.messenger.core.service.MessengerService;
 import com.android.car.messenger.core.ui.conversationlist.ConversationListFragment;
 import com.android.car.ui.baselayout.Insets;
 import com.android.car.ui.baselayout.InsetsChangedListener;
@@ -39,11 +41,14 @@ public class MessageLauncherActivity extends FragmentActivity implements InsetsC
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        L.d(TAG, "onCreate: MessageLauncher");
         super.onCreate(savedInstanceState);
         MessageLauncherViewModel viewModel =
                 new ViewModelProvider(this).get(MessageLauncherViewModel.class);
 
-        L.d(TAG, "onCreate: MessageLauncher");
+        L.d(TAG, "Starting MessengerService");
+        startService(new Intent(this, MessengerService.class));
+
         viewModel
                 .getAccounts()
                 .observe(

@@ -58,10 +58,22 @@ public class OnBootReceiverTest {
     }
 
     @Test
-    public void testOnReceive() {
+    public void testOnReceive_bootCompleted() {
         OnBootReceiver onBootReceiver = new OnBootReceiver();
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_BOOT_COMPLETED);
+
+        onBootReceiver.onReceive(mContext, intent);
+        verify(mContext).startService(mCaptor.capture());
+        assertThat(mCaptor.getValue().getComponent().getClassName())
+                .isEqualTo(MessengerService.class.getName());
+    }
+
+    @Test
+    public void testOnReceive_packageReplaced() {
+        OnBootReceiver onBootReceiver = new OnBootReceiver();
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MY_PACKAGE_REPLACED);
 
         onBootReceiver.onReceive(mContext, intent);
         verify(mContext).startService(mCaptor.capture());

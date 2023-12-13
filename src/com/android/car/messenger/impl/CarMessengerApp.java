@@ -34,6 +34,7 @@ public class CarMessengerApp extends Application implements UncaughtExceptionHan
 
     @Override
     public void onCreate() {
+        L.d(TAG, "CarMessengerApp onCreate");
         super.onCreate();
         AppFactoryImpl.register(this);
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();

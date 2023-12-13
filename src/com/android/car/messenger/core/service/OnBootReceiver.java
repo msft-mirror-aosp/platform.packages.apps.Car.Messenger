@@ -32,8 +32,10 @@ public class OnBootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-        L.d(TAG, "BootReceiver received!");
+        L.d(TAG, "BootReceiver received " + intent.getAction());
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+            context.startService(new Intent(context, MessengerService.class));
+        } else if (Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
             context.startService(new Intent(context, MessengerService.class));
         }
     }
