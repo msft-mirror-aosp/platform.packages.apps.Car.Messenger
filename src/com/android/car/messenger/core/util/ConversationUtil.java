@@ -61,7 +61,7 @@ public class ConversationUtil {
         if (lastMessageGroup != null) {
             lastMessageTimestamp = lastMessageGroup.getTimestamp();
         }
-        return lastReplyTimestamp > lastMessageTimestamp;
+        return lastReplyTimestamp >= lastMessageTimestamp;
     }
 
     /**

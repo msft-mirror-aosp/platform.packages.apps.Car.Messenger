@@ -95,7 +95,8 @@ public class ConversationFetchUtilTest {
             setupFetch(person);
             doReturn(messages).when(() -> MessageUtils.getMessages(anyInt(), any(), any()));
 
-            Conversation conversation = ConversationFetchUtil.fetchConversation(TEST_CONTACT_ID);
+            Conversation conversation =
+                    ConversationFetchUtil.fetchSummarizedConversation(TEST_CONTACT_ID);
             assertThat(conversation.getMessages()).isEmpty();
             assertThat(conversation.getExtras().containsKey(MessageConstants.LAST_REPLY_TEXT_EXTRA))
                     .isFalse();
@@ -121,7 +122,8 @@ public class ConversationFetchUtilTest {
             setupFetch(person);
             doReturn(messages).when(() -> MessageUtils.getMessages(anyInt(), any(), any()));
 
-            Conversation conversation = ConversationFetchUtil.fetchConversation(TEST_CONTACT_ID);
+            Conversation conversation =
+                    ConversationFetchUtil.fetchSummarizedConversation(TEST_CONTACT_ID);
             assertThat(conversation.getMessages()).containsExactly(msg).inOrder();
             assertThat(conversation.getExtras().containsKey(MessageConstants.LAST_REPLY_TEXT_EXTRA))
                     .isFalse();
@@ -149,10 +151,40 @@ public class ConversationFetchUtilTest {
             setupFetch(person);
             doReturn(messages).when(() -> MessageUtils.getMessages(anyInt(), any(), any()));
 
-            Conversation conversation = ConversationFetchUtil.fetchConversation(TEST_CONTACT_ID);
+            Conversation conversation =
+                    ConversationFetchUtil.fetchSummarizedConversation(TEST_CONTACT_ID);
             assertThat(conversation.getMessages()).containsExactly(msg);
             assertThat(conversation.getExtras().getString(MessageConstants.LAST_REPLY_TEXT_EXTRA))
                     .isEqualTo(reply.getText());
+        } finally {
+            session.finishMocking();
+        }
+    }
+
+    @Test
+    public void testFetchConversation_replyMessages() {
+        MockitoSession session = mockitoSession().strictness(Strictness.LENIENT)
+                .spyStatic(CursorUtils.class)
+                .spyStatic(MessageUtils.class)
+                .spyStatic(ContactUtils.class)
+                .startMocking();
+
+        Person person = new Person.Builder().build();
+        Message reply = new Message("reply1", /* timestamp= */ 1, person)
+                .setMessageType(MessageType.MESSAGE_TYPE_SENT);
+        Message reply2 = new Message("reply2", /* timestamp= */ 2, person)
+                .setMessageType(MessageType.MESSAGE_TYPE_SENT);
+        List<Message> messages = Arrays.asList(reply, reply2);
+
+        try {
+            setupFetch(person);
+            doReturn(messages).when(() -> MessageUtils.getMessages(anyInt(), any(), any()));
+
+            Conversation conversation =
+                    ConversationFetchUtil.fetchSummarizedConversation(TEST_CONTACT_ID);
+            assertThat(conversation.getMessages()).containsExactly(reply2);
+            assertThat(conversation.getExtras().getString(MessageConstants.LAST_REPLY_TEXT_EXTRA))
+                    .isEqualTo(reply2.getText());
         } finally {
             session.finishMocking();
         }

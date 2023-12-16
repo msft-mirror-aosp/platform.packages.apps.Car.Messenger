@@ -16,7 +16,7 @@
 
 package com.android.car.messenger.impl.datamodels;
 
-import static com.android.car.messenger.impl.datamodels.util.ConversationFetchUtil.fetchConversation;
+import static com.android.car.messenger.impl.datamodels.util.ConversationFetchUtil.fetchSummarizedConversation;
 import static com.android.car.messenger.impl.datamodels.util.CursorUtils.DEFAULT_SORT_ORDER;
 
 import android.content.Context;
@@ -91,7 +91,7 @@ public class NewMessageLiveData extends ContentProviderLiveData<Conversation> {
 
     @Override
     public void onDataChange() {
-        L.d(TAG, "telephony database changed");
+        L.d(TAG, "NewMessageLiveData: telephony database changed");
         for (UserAccount userAccount : mUserAccounts) {
             if (hasProjectionInForeground(userAccount)) {
                 continue;
@@ -129,7 +129,7 @@ public class NewMessageLiveData extends ContentProviderLiveData<Conversation> {
 
         Conversation conversation;
         try {
-            conversation = fetchConversation(conversationId);
+            conversation = fetchSummarizedConversation(conversationId);
         } catch (CursorIndexOutOfBoundsException e) {
             L.w(TAG, "Error occurred fetching conversation Id: %s", conversationId);
             return false;

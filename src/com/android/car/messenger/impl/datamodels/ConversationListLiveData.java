@@ -18,7 +18,7 @@ package com.android.car.messenger.impl.datamodels;
 
 import static android.provider.Telephony.TextBasedSmsColumns.THREAD_ID;
 
-import static com.android.car.messenger.impl.datamodels.util.ConversationFetchUtil.fetchConversation;
+import static com.android.car.messenger.impl.datamodels.util.ConversationFetchUtil.fetchSummarizedConversation;
 import static com.android.car.messenger.impl.datamodels.util.ConversationFetchUtil.loadMutedList;
 
 import static java.util.Comparator.comparingLong;
@@ -84,14 +84,14 @@ class ConversationListLiveData extends ContentProviderLiveData<Collection<Conver
 
     @Override
     public void onDataChange() {
-        L.d(TAG, "telephony database changed");
+        L.d(TAG, "ConversationListLiveData: telephony database changed");
         Cursor cursor = ConversationsPerDeviceFetchManager.getCursor(mUserAccount.getId());
         ArrayList<Conversation> conversations = new ArrayList<>();
         while (cursor != null && cursor.moveToNext()) {
             String conversationId = cursor.getString(cursor.getColumnIndex(THREAD_ID));
             Conversation conversation = null;
             try {
-                conversation = fetchConversation(conversationId);
+                conversation = fetchSummarizedConversation(conversationId);
             } catch (CursorIndexOutOfBoundsException e) {
                 L.w(TAG, "Error occurred fetching conversation Id: %s", conversationId);
             } finally {

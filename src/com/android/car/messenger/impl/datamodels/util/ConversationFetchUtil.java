@@ -53,9 +53,16 @@ public class ConversationFetchUtil {
 
     private ConversationFetchUtil() {}
 
-    /** Fetches a conversation item based on a provided conversation id */
-    public static Conversation fetchConversation(@NonNull String conversationId) {
-        L.d(TAG, "Fetching latest data for Conversation " + conversationId);
+    /**
+     * Fetches a conversation item based on a provided conversation id
+     *
+     * The contents of the conversation will be in the following priority:
+     * 1. Unread messages
+     * 2. Read messages
+     * 3. Last reply
+     */
+    public static Conversation fetchSummarizedConversation(@NonNull String conversationId) {
+        L.d(TAG, "Fetching summarized conversation " + conversationId);
         Conversation.Builder conversationBuilder = initConversationBuilder(conversationId);
         Cursor mmsCursor = getMmsCursor(conversationId);
         Cursor smsCursor = getSmsCursor(conversationId);
@@ -78,6 +85,11 @@ public class ConversationFetchUtil {
                     MessageUtils.getReadMessagesAndReplyTimestamp(messages);
             messagesToRead = readMessagesAndReplyTimestamp.first;
             lastReply = readMessagesAndReplyTimestamp.second;
+        }
+
+        // if no read messages, add the last reply
+        if (messagesToRead.isEmpty() && lastReply != null) {
+            messagesToRead.add(lastReply);
         }
 
         conversationBuilder.setMessages(messagesToRead).setUnreadCount(unreadCount);
