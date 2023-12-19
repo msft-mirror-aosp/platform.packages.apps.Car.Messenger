@@ -17,13 +17,13 @@
 package com.android.car.messenger.impl.datamodels.util;
 
 import static java.lang.Math.min;
+import static java.util.Comparator.comparingLong;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.Person;
@@ -35,7 +35,6 @@ import com.android.car.messenger.common.Conversation;
 import com.android.car.messenger.core.interfaces.AppFactory;
 import com.android.car.messenger.core.shared.MessageConstants;
 import com.android.car.messenger.core.ui.conversationlist.UIConversationItemConverter;
-import com.android.car.messenger.core.util.ConversationUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,46 +53,26 @@ public class ConversationFetchUtil {
     private ConversationFetchUtil() {}
 
     /**
-     * Fetches a conversation item based on a provided conversation id
+     * Fetches a complete conversation based on a provided conversation id
      *
-     * The contents of the conversation will be in the following priority:
-     * 1. Unread messages
-     * 2. Read messages
-     * 3. Last reply
+     * Messages are ordered in ascending order, from oldest to latest
      */
-    public static Conversation fetchSummarizedConversation(@NonNull String conversationId) {
-        L.d(TAG, "Fetching summarized conversation " + conversationId);
+    public static Conversation fetchCompleteConversation(@NonNull String conversationId) {
+        L.d(TAG, "Fetching complete conversation " + conversationId);
         Conversation.Builder conversationBuilder = initConversationBuilder(conversationId);
         Cursor mmsCursor = getMmsCursor(conversationId);
         Cursor smsCursor = getSmsCursor(conversationId);
 
-        // message list sorted by date desc
+        // message list sorted by date desc (latest to oldest)
         List<Conversation.Message> messages =
                 MessageUtils.getMessages(MESSAGE_LIMIT, mmsCursor, smsCursor);
 
-        // messages to read: first get unread messages
-        // List should truncate at the latest reply or read message since reading a recent message
-        // does not mark all previous messages read.
         List<Conversation.Message> messagesToRead = MessageUtils.getUnreadMessages(messages);
-
         int unreadCount = messagesToRead.size();
-        Conversation.Message lastReply = null;
 
-        // if no unread messages, get read messages
-        if (messagesToRead.isEmpty()) {
-            Pair<List<Conversation.Message>, Conversation.Message> readMessagesAndReplyTimestamp =
-                    MessageUtils.getReadMessagesAndReplyTimestamp(messages);
-            messagesToRead = readMessagesAndReplyTimestamp.first;
-            lastReply = readMessagesAndReplyTimestamp.second;
-        }
-
-        // if no read messages, add the last reply
-        if (messagesToRead.isEmpty() && lastReply != null) {
-            messagesToRead.add(lastReply);
-        }
-
-        conversationBuilder.setMessages(messagesToRead).setUnreadCount(unreadCount);
-        ConversationUtil.setReplyAsAnExtra(conversationBuilder, /* extras= */ null, lastReply);
+        // sort ascending
+        messages.sort(comparingLong(Conversation.Message::getTimestamp));
+        conversationBuilder.setMessages(messages).setUnreadCount(unreadCount);
         return conversationBuilder.build();
     }
 

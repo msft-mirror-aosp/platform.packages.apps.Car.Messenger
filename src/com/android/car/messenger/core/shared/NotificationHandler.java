@@ -17,7 +17,6 @@
 package com.android.car.messenger.core.shared;
 
 import static com.android.car.messenger.core.shared.MessageConstants.EXTRA_ACCOUNT_ID;
-import static com.android.car.messenger.core.shared.MessageConstants.LAST_REPLY_TIMESTAMP_EXTRA;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -54,6 +53,8 @@ public class NotificationHandler {
 
     private static final int TAP_TO_READ_SBN_ATTEMPT_LIMIT = 3;
 
+    @VisibleForTesting
+    static final String LAST_REPLY_TIMESTAMP = "LAST_REPLY_TIMESTAMP";
     @VisibleForTesting
     static final int TIME_DESYNC_NOTIFICATION_ID = 1337;
     private static final String DATE_SETTINGS_INTENT_ACTION = "android.settings.DATE_SETTINGS";
@@ -109,7 +110,7 @@ public class NotificationHandler {
 
         long localTimestamp = Calendar.getInstance().getTimeInMillis();
         long incomingTimestamp = ConversationUtil.getConversationTimestamp(conversation);
-        long storedTimestamp = prefs.getLong(LAST_REPLY_TIMESTAMP_EXTRA, 0);
+        long storedTimestamp = prefs.getLong(LAST_REPLY_TIMESTAMP, 0);
         long reminderIntervalMillis =
                 res.getInteger(R.integer.time_desync_reminder_interval_mins) * 60000L;
 
@@ -117,7 +118,7 @@ public class NotificationHandler {
 
         // Occasionally post the notification so we don't spam the user.
         if (isDesynced && incomingTimestamp - storedTimestamp > reminderIntervalMillis) {
-            prefs.edit().putLong(LAST_REPLY_TIMESTAMP_EXTRA, incomingTimestamp).apply();
+            prefs.edit().putLong(LAST_REPLY_TIMESTAMP, incomingTimestamp).apply();
 
             L.d(TAG, "posting desync notification");
 

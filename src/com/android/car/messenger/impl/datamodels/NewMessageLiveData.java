@@ -16,7 +16,7 @@
 
 package com.android.car.messenger.impl.datamodels;
 
-import static com.android.car.messenger.impl.datamodels.util.ConversationFetchUtil.fetchSummarizedConversation;
+import static com.android.car.messenger.impl.datamodels.util.ConversationFetchUtil.fetchCompleteConversation;
 import static com.android.car.messenger.impl.datamodels.util.CursorUtils.DEFAULT_SORT_ORDER;
 
 import android.content.Context;
@@ -129,7 +129,7 @@ public class NewMessageLiveData extends ContentProviderLiveData<Conversation> {
 
         Conversation conversation;
         try {
-            conversation = fetchSummarizedConversation(conversationId);
+            conversation = fetchCompleteConversation(conversationId);
         } catch (CursorIndexOutOfBoundsException e) {
             L.w(TAG, "Error occurred fetching conversation Id: %s", conversationId);
             return false;

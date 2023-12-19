@@ -149,7 +149,7 @@ public class ConversationListLiveDataTest {
             Conversation conv3 = buildConversation(/* id= */ "3", /* timestamp */ 200);
 
             doReturn(conv1, conv2, conv3).when(
-                    () -> ConversationFetchUtil.fetchSummarizedConversation(any()));
+                    () -> ConversationFetchUtil.fetchCompleteConversation(any()));
 
             mConversationListLiveData.observe(mMockLifecycleOwner,
                     (value) -> mMockObserver.onChanged(value));

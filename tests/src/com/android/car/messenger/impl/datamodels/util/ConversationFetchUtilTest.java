@@ -36,10 +36,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.android.car.messenger.common.Conversation;
 import com.android.car.messenger.common.Conversation.Message;
-import com.android.car.messenger.common.Conversation.Message.MessageStatus;
-import com.android.car.messenger.common.Conversation.Message.MessageType;
 import com.android.car.messenger.core.shared.MessageConstants;
 import com.android.car.messenger.impl.AppFactoryTestImpl;
+import com.android.car.messenger.testing.TestUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -96,10 +95,42 @@ public class ConversationFetchUtilTest {
             doReturn(messages).when(() -> MessageUtils.getMessages(anyInt(), any(), any()));
 
             Conversation conversation =
-                    ConversationFetchUtil.fetchSummarizedConversation(TEST_CONTACT_ID);
+                    ConversationFetchUtil.fetchCompleteConversation(TEST_CONTACT_ID);
             assertThat(conversation.getMessages()).isEmpty();
-            assertThat(conversation.getExtras().containsKey(MessageConstants.LAST_REPLY_TEXT_EXTRA))
-                    .isFalse();
+            assertThat(conversation.getUnreadCount()).isEqualTo(0);
+        } finally {
+            session.finishMocking();
+        }
+    }
+
+    @Test
+    public void testFetchConversation_mixedMessages() {
+        MockitoSession session = mockitoSession().strictness(Strictness.LENIENT)
+                .spyStatic(CursorUtils.class)
+                .spyStatic(MessageUtils.class)
+                .spyStatic(ContactUtils.class)
+                .startMocking();
+
+        Person person = new Person.Builder().build();
+        Message msg1 = TestUtils.createRecvMessage(
+                "test1", /* timestamp= */ 1, person, /* isRead= */ true);
+        Message reply1 = TestUtils.createReplyMessage(
+                "test1", /* timestamp= */ 2, person);
+        Message msg2 = TestUtils.createRecvMessage(
+                "test1", /* timestamp= */ 3, person, /* isRead= */ false);
+        Message reply2 = TestUtils.createReplyMessage(
+                "test1", /* timestamp= */ 4, person);
+        List<Message> messages = TestUtils.createMessageListDesc(reply2, msg2, reply1, msg1);
+
+        try {
+            setupFetch(person);
+            doReturn(messages).when(() -> MessageUtils.getMessages(anyInt(), any(), any()));
+
+            Conversation conversation =
+                    ConversationFetchUtil.fetchCompleteConversation(TEST_CONTACT_ID);
+            assertThat(conversation.getMessages())
+                    .containsExactly(msg1, reply1, msg2, reply2).inOrder();
+            assertThat(conversation.getUnreadCount()).isEqualTo(0);
         } finally {
             session.finishMocking();
         }
@@ -114,77 +145,25 @@ public class ConversationFetchUtilTest {
                 .startMocking();
 
         Person person = new Person.Builder().build();
-        Message msg = new Message("test1", /* timestamp= */ 1, person)
-                .setMessageStatus(MessageStatus.MESSAGE_STATUS_UNREAD);
-        List<Message> messages = Arrays.asList(msg);
+        Message reply1 = TestUtils.createReplyMessage(
+                "test1", /* timestamp= */ 1, person);
+        Message msg1 = TestUtils.createRecvMessage(
+                "test1", /* timestamp= */ 2, person, /* isRead= */ true);
+        Message msg2 = TestUtils.createRecvMessage(
+                "test1", /* timestamp= */ 3, person, /* isRead= */ false);
+        Message msg3 = TestUtils.createRecvMessage(
+                "test1", /* timestamp= */ 4, person, /* isRead= */ false);
+        List<Message> messages = TestUtils.createMessageListDesc(msg3, msg2, msg1, reply1);
 
         try {
             setupFetch(person);
             doReturn(messages).when(() -> MessageUtils.getMessages(anyInt(), any(), any()));
 
             Conversation conversation =
-                    ConversationFetchUtil.fetchSummarizedConversation(TEST_CONTACT_ID);
-            assertThat(conversation.getMessages()).containsExactly(msg).inOrder();
-            assertThat(conversation.getExtras().containsKey(MessageConstants.LAST_REPLY_TEXT_EXTRA))
-                    .isFalse();
-        } finally {
-            session.finishMocking();
-        }
-    }
-
-    @Test
-    public void testFetchConversation_readAndReplyMessages() {
-        MockitoSession session = mockitoSession().strictness(Strictness.LENIENT)
-                .spyStatic(CursorUtils.class)
-                .spyStatic(MessageUtils.class)
-                .spyStatic(ContactUtils.class)
-                .startMocking();
-
-        Person person = new Person.Builder().build();
-        Message msg = new Message("test1", /* timestamp= */ 1, person)
-                .setMessageStatus(MessageStatus.MESSAGE_STATUS_READ);
-        Message reply = new Message("reply1", /* timestamp= */ 2, person)
-                .setMessageType(MessageType.MESSAGE_TYPE_SENT);
-        List<Message> messages = Arrays.asList(msg, reply);
-
-        try {
-            setupFetch(person);
-            doReturn(messages).when(() -> MessageUtils.getMessages(anyInt(), any(), any()));
-
-            Conversation conversation =
-                    ConversationFetchUtil.fetchSummarizedConversation(TEST_CONTACT_ID);
-            assertThat(conversation.getMessages()).containsExactly(msg);
-            assertThat(conversation.getExtras().getString(MessageConstants.LAST_REPLY_TEXT_EXTRA))
-                    .isEqualTo(reply.getText());
-        } finally {
-            session.finishMocking();
-        }
-    }
-
-    @Test
-    public void testFetchConversation_replyMessages() {
-        MockitoSession session = mockitoSession().strictness(Strictness.LENIENT)
-                .spyStatic(CursorUtils.class)
-                .spyStatic(MessageUtils.class)
-                .spyStatic(ContactUtils.class)
-                .startMocking();
-
-        Person person = new Person.Builder().build();
-        Message reply = new Message("reply1", /* timestamp= */ 1, person)
-                .setMessageType(MessageType.MESSAGE_TYPE_SENT);
-        Message reply2 = new Message("reply2", /* timestamp= */ 2, person)
-                .setMessageType(MessageType.MESSAGE_TYPE_SENT);
-        List<Message> messages = Arrays.asList(reply, reply2);
-
-        try {
-            setupFetch(person);
-            doReturn(messages).when(() -> MessageUtils.getMessages(anyInt(), any(), any()));
-
-            Conversation conversation =
-                    ConversationFetchUtil.fetchSummarizedConversation(TEST_CONTACT_ID);
-            assertThat(conversation.getMessages()).containsExactly(reply2);
-            assertThat(conversation.getExtras().getString(MessageConstants.LAST_REPLY_TEXT_EXTRA))
-                    .isEqualTo(reply2.getText());
+                    ConversationFetchUtil.fetchCompleteConversation(TEST_CONTACT_ID);
+            assertThat(conversation.getMessages())
+                    .containsExactly(reply1, msg1, msg2, msg3).inOrder();
+            assertThat(conversation.getUnreadCount()).isEqualTo(2);
         } finally {
             session.finishMocking();
         }

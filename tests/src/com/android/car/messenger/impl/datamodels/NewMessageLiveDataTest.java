@@ -172,7 +172,7 @@ public class NewMessageLiveDataTest {
             Conversation conversation = new Conversation.Builder(
                     new Person.Builder().build(), /* conversationId= */ "0").build();
             doReturn(conversation).when(
-                    () -> ConversationFetchUtil.fetchSummarizedConversation(any()));
+                    () -> ConversationFetchUtil.fetchCompleteConversation(any()));
             doReturn(mMockUserAccountLiveData).when(() -> UserAccountLiveData.getInstance());
 
             mNewMessageLiveData = new NewMessageLiveData();
@@ -207,7 +207,7 @@ public class NewMessageLiveDataTest {
             Conversation conversation = new Conversation.Builder(
                     new Person.Builder().build(), /* conversationId= */ "0").build();
             doReturn(conversation).when(
-                    () -> ConversationFetchUtil.fetchSummarizedConversation(any()));
+                    () -> ConversationFetchUtil.fetchCompleteConversation(any()));
             doReturn(mMockUserAccountLiveData).when(() -> UserAccountLiveData.getInstance());
 
             mNewMessageLiveData = new NewMessageLiveData();

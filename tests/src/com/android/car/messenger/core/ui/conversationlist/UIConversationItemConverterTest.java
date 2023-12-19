@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
 
 import android.car.drivingstate.CarUxRestrictions;
 import android.content.Context;
-import android.os.Bundle;
 
 import androidx.core.app.Person;
 import androidx.test.core.app.ApplicationProvider;
@@ -31,17 +30,17 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.android.car.messenger.R;
 import com.android.car.messenger.common.Conversation;
 import com.android.car.messenger.common.Conversation.Message.MessageStatus;
-import com.android.car.messenger.core.shared.MessageConstants;
+import com.android.car.messenger.common.Conversation.Message.MessageType;
 import com.android.car.messenger.impl.AppFactoryTestImpl;
 
-import org.junit.Before;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 @RunWith(AndroidJUnit4.class)
 public class UIConversationItemConverterTest {
@@ -138,12 +137,7 @@ public class UIConversationItemConverterTest {
         Conversation.Builder builder = new Conversation.Builder(mPerson, CONVERSATION_ID);
         builder.setConversationTitle(CONVERSATION_TITLE);
 
-        if (isReplied) {
-            Bundle extras = new Bundle();
-            extras.putLong(MessageConstants.LAST_REPLY_TIMESTAMP_EXTRA, REPLY_TIMESTAMP);
-            extras.putString(MessageConstants.LAST_REPLY_TEXT_EXTRA, REPLY_STRING);
-            builder.setExtras(extras);
-        }
+        ArrayList<Conversation.Message> messages = new ArrayList<>();
 
         Conversation.Message msg = new Conversation.Message(MSG_STRING, MSG_TIMESTAMP, mPerson);
         if (isUnread) {
@@ -153,8 +147,16 @@ public class UIConversationItemConverterTest {
             msg.setMessageStatus(MessageStatus.MESSAGE_STATUS_READ);
             builder.setUnreadCount(0);
         }
-        builder.setMessages(Arrays.asList(msg));
+        messages.add(msg);
 
+        if (isReplied) {
+            Conversation.Message reply =
+                    new Conversation.Message(REPLY_STRING, REPLY_TIMESTAMP, mPerson);
+            reply.setMessageType(MessageType.MESSAGE_TYPE_SENT);
+            messages.add(reply);
+        }
+
+        builder.setMessages(messages);
         return builder.build();
     }
 

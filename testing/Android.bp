@@ -26,6 +26,7 @@ android_library {
         "androidx.test.espresso.core",
         "androidx.test.espresso.contrib",
         "mockito-target-extended-minus-junit4",
+        "car-messenger-common",
     ],
 
     optimize: {

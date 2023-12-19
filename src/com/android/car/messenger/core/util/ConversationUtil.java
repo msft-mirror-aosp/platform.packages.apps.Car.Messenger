@@ -16,23 +16,18 @@
 
 package com.android.car.messenger.core.util;
 
-import static com.android.car.messenger.core.shared.MessageConstants.LAST_REPLY_TEXT_EXTRA;
-import static com.android.car.messenger.core.shared.MessageConstants.LAST_REPLY_TIMESTAMP_EXTRA;
-
-import static java.lang.Math.max;
-
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.android.car.messenger.R;
 import com.android.car.messenger.common.Conversation;
 import com.android.car.messenger.common.Conversation.Message;
-import com.android.car.messenger.common.Conversation.Message.MessageStatus;
-import com.android.car.messenger.core.interfaces.AppFactory;
+import com.android.car.messenger.common.Conversation.Message.MessageType;
 
-/** Conversation Util class for the {@link Conversation} DAO */
+/**
+ * Conversation Util class for the {@link Conversation} DAO.
+ *
+ * Conversation messages should be ordered in ascending order, from oldest to latest.
+ */
 public class ConversationUtil {
     private ConversationUtil() {}
 
@@ -44,10 +39,11 @@ public class ConversationUtil {
         if (conversation == null) {
             return 0L;
         }
-        long replyTimestamp = conversation.getExtras().getLong(LAST_REPLY_TIMESTAMP_EXTRA, 0L);
-        Message lastMessage = getLastIncomingMessage(conversation);
-        long lastMessageTimestamp = lastMessage == null ? 0L : lastMessage.getTimestamp();
-        return max(replyTimestamp, lastMessageTimestamp);
+        Message msg = getLastMessage(conversation);
+        if (msg == null) {
+            return 0L;
+        }
+        return msg.getTimestamp();
     }
 
     /** Returns if the {@link Conversation} has been last responded to. */
@@ -55,21 +51,17 @@ public class ConversationUtil {
         if (conversation == null) {
             return false;
         }
-        long lastReplyTimestamp = getReplyTimestamp(conversation);
-        long lastMessageTimestamp = 0L;
-        Message lastMessageGroup = ConversationUtil.getLastIncomingMessage(conversation);
-        if (lastMessageGroup != null) {
-            lastMessageTimestamp = lastMessageGroup.getTimestamp();
+        Message msg = getLastMessage(conversation);
+        if (msg == null) {
+            return false;
         }
-        return lastReplyTimestamp >= lastMessageTimestamp;
+        return msg.getMessageType() == MessageType.MESSAGE_TYPE_SENT;
     }
 
-    /**
-     * Returns the last incoming message in the conversation, or null if {@link
-     * Conversation#getMessages} is empty
-     */
+    /** Returns the last message in the conversation, or null if {@link
+     * Conversation#getMessages} is empty */
     @Nullable
-    public static Message getLastIncomingMessage(@Nullable Conversation conversation) {
+    public static Message getLastMessage(@Nullable Conversation conversation) {
         if (conversation == null || conversation.getMessages().isEmpty()) {
             return null;
         }
@@ -83,66 +75,10 @@ public class ConversationUtil {
      */
     @NonNull
     public static String getLastMessagePreview(@Nullable Conversation conversation) {
-        Message lastIncomingMessage = getLastIncomingMessage(conversation);
-        if (isReplied(conversation)) {
-            String lastReply = getLastReply(conversation);
-            if (lastReply == null) {
-                return AppFactory.get().getContext().getString(R.string.replied);
-            }
-            return lastReply;
-        } else if (lastIncomingMessage != null) {
-            return lastIncomingMessage.getText();
+        Message lastMessage = getLastMessage(conversation);
+        if (lastMessage == null) {
+            return "";
         }
-        return "";
-    }
-
-    /**
-     * Gets the conversation status of the last messages Returns {@link
-     * MessageStatus#MESSAGE_STATUS_NONE} when no known message status or last message is a reply
-     */
-    @MessageStatus
-    public static int getConversationStatus(@Nullable Conversation conversation) {
-        Message lastMessage = getLastIncomingMessage(conversation);
-        return isReplied(conversation) || lastMessage == null
-                ? MessageStatus.MESSAGE_STATUS_NONE
-                : lastMessage.getMessageStatus();
-    }
-
-    /**
-     * Sets the Reply timestamp to a {@link Conversation.Builder}
-     *
-     * @param extras optional, pass an existing bundle to which the reply timestamp will be added
-     *     to. If no extra is passed, a new one will be created. The final extras will be added to
-     *     the {@link Conversation#getExtras()}
-     */
-    public static void setReplyAsAnExtra(
-            @NonNull Conversation.Builder conversationBuilder,
-            @Nullable Bundle extras,
-            @Nullable Message lastReply) {
-        if (lastReply != null) {
-            if (extras == null) {
-                extras = new Bundle();
-            }
-            extras.putLong(LAST_REPLY_TIMESTAMP_EXTRA, lastReply.getTimestamp());
-            extras.putString(LAST_REPLY_TEXT_EXTRA, lastReply.getText());
-            conversationBuilder.setExtras(extras);
-        }
-    }
-
-    /** Gets reply timestamp */
-    private static long getReplyTimestamp(@Nullable Conversation conversation) {
-        if (conversation == null) {
-            return 0L;
-        }
-        return conversation.getExtras().getLong(LAST_REPLY_TIMESTAMP_EXTRA, 0L);
-    }
-
-    /** Gets last reply, if any */
-    @Nullable
-    private static String getLastReply(@Nullable Conversation conversation) {
-        if (conversation == null) {
-            return null;
-        }
-        return conversation.getExtras().getString(LAST_REPLY_TEXT_EXTRA, "");
+        return lastMessage.getText();
     }
 }

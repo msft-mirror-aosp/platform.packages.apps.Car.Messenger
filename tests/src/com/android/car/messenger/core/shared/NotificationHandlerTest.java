@@ -19,7 +19,7 @@ package com.android.car.messenger.core.shared;
 import static android.app.Notification.EXTRA_TEXT;
 import static android.app.Notification.EXTRA_TITLE;
 
-import static com.android.car.messenger.core.shared.MessageConstants.LAST_REPLY_TIMESTAMP_EXTRA;
+import static com.android.car.messenger.core.shared.NotificationHandler.LAST_REPLY_TIMESTAMP;
 import static com.android.car.messenger.core.shared.NotificationHandler.TIME_DESYNC_NOTIFICATION_ID;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -89,7 +89,7 @@ public class NotificationHandlerTest {
 
     @Test
     public void postTimestampDesyncNotificationTest_postNotification() {
-        mSharedPrefs.edit().putLong(LAST_REPLY_TIMESTAMP_EXTRA, 0).apply();
+        mSharedPrefs.edit().putLong(LAST_REPLY_TIMESTAMP, 0).apply();
 
         Person user = new Person.Builder().setName("user").build();
         List<Conversation.Message> messages = new ArrayList<>();
@@ -113,7 +113,7 @@ public class NotificationHandlerTest {
 
     @Test
     public void postTimestampDesyncNotificationTest_postTooSoon() {
-        mSharedPrefs.edit().putLong(LAST_REPLY_TIMESTAMP_EXTRA, 0).apply();
+        mSharedPrefs.edit().putLong(LAST_REPLY_TIMESTAMP, 0).apply();
 
         Person user = new Person.Builder().setName("user").build();
         List<Conversation.Message> messages = new ArrayList<>();
