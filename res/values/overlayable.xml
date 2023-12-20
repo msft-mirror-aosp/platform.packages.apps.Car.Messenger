@@ -110,8 +110,10 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="id" name="title"/>
       <item type="id" name="unread_badge"/>
       <item type="integer" name="config_letter_tile_text_style"/>
+      <item type="integer" name="conversation_size_limit"/>
       <item type="integer" name="group_avatar_images_corner_radius"/>
       <item type="integer" name="group_avatar_max_group_size"/>
+      <item type="integer" name="max_unread_count"/>
       <item type="integer" name="time_desync_reminder_interval_mins"/>
       <item type="layout" name="conversation_list_item"/>
       <item type="layout" name="empty_view"/>

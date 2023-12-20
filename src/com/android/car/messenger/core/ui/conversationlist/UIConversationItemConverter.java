@@ -32,9 +32,6 @@ import java.util.Objects;
 /** Util class that converts Conversation Item to UIConversationItem */
 public class UIConversationItemConverter {
 
-    // See ConversationFetchUtil#MESSAGE_LIMIT
-    public static final int MAX_UNREAD_COUNT = 10;
-
     private UIConversationItemConverter() {}
 
     /** Converts Conversation Item to UIConversationItem */
@@ -67,8 +64,9 @@ public class UIConversationItemConverter {
         }
 
         String unreadCountText = Integer.toString(unreadCount);
-        if (unreadCount > MAX_UNREAD_COUNT) {
-            unreadCountText = context.getString(R.string.message_overflow, MAX_UNREAD_COUNT);
+        int maxUnreadCount = context.getResources().getInteger(R.integer.max_unread_count);
+        if (unreadCount > maxUnreadCount) {
+            unreadCountText = context.getString(R.string.message_overflow, maxUnreadCount);
         }
 
         long timestamp = ConversationUtil.getConversationTimestamp(conversation);

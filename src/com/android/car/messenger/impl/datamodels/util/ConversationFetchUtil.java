@@ -34,7 +34,6 @@ import com.android.car.messenger.R;
 import com.android.car.messenger.common.Conversation;
 import com.android.car.messenger.core.interfaces.AppFactory;
 import com.android.car.messenger.core.shared.MessageConstants;
-import com.android.car.messenger.core.ui.conversationlist.UIConversationItemConverter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,7 +45,6 @@ import java.util.function.BiConsumer;
 public class ConversationFetchUtil {
     private static final String TAG = "CM.ConversationFetchUtil";
 
-    private static final int MESSAGE_LIMIT = UIConversationItemConverter.MAX_UNREAD_COUNT + 1;
     private static final String COMMA_DELIMITER = ", ";
     private static final int MAX_TITLE_NAMES = 3;
 
@@ -62,10 +60,12 @@ public class ConversationFetchUtil {
         Conversation.Builder conversationBuilder = initConversationBuilder(conversationId);
         Cursor mmsCursor = getMmsCursor(conversationId);
         Cursor smsCursor = getSmsCursor(conversationId);
+        Context context = AppFactory.get().getContext();
+        int messageLimit = context.getResources().getInteger(R.integer.conversation_size_limit);
 
         // message list sorted by date desc (latest to oldest)
         List<Conversation.Message> messages =
-                MessageUtils.getMessages(MESSAGE_LIMIT, mmsCursor, smsCursor);
+                MessageUtils.getMessages(messageLimit, mmsCursor, smsCursor);
 
         List<Conversation.Message> messagesToRead = MessageUtils.getUnreadMessages(messages);
         int unreadCount = messagesToRead.size();
@@ -155,12 +155,16 @@ public class ConversationFetchUtil {
     }
 
     private static Cursor getMmsCursor(@NonNull String conversationId) {
+        Context context = AppFactory.get().getContext();
+        int messageLimit = context.getResources().getInteger(R.integer.conversation_size_limit);
         return CursorUtils.getMessagesCursor(
-                conversationId, MESSAGE_LIMIT, CursorUtils.ContentType.MMS);
+                conversationId, messageLimit, CursorUtils.ContentType.MMS);
     }
 
     private static Cursor getSmsCursor(@NonNull String conversationId) {
+        Context context = AppFactory.get().getContext();
+        int messageLimit = context.getResources().getInteger(R.integer.conversation_size_limit);
         return CursorUtils.getMessagesCursor(
-                conversationId, MESSAGE_LIMIT, CursorUtils.ContentType.SMS);
+                conversationId, messageLimit, CursorUtils.ContentType.SMS);
     }
 }

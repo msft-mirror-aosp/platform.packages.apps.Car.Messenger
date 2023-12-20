@@ -18,6 +18,7 @@ package com.android.car.messenger.impl.datamodels.util;
 
 import static com.android.dx.mockito.inline.extended.ExtendedMockito.doReturn;
 import static com.android.dx.mockito.inline.extended.ExtendedMockito.mockitoSession;
+
 import static com.google.common.truth.Truth.assertThat;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -26,7 +27,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import android.database.Cursor;
-import android.util.Pair;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -108,29 +108,9 @@ public class MessageUtilsTest {
         Message msg3 = new Message("text3", /* timestamp= */ 3, /* person= */ null)
                 .setMessageStatus(MessageStatus.MESSAGE_STATUS_UNREAD);
 
-        List<Message> messages = MessageUtils.getUnreadMessages(Arrays.asList(msg3, msg2, msg));
+        List<Message> messages = MessageUtils.getUnreadMessages(Arrays.asList(msg2, msg3, msg));
 
-        assertThat(messages).containsExactly(msg2, msg3).inOrder();
-    }
-
-    @Test
-    public void testGetReadMessagesAndReplyTimestamp() {
-        Message msg = new Message("text1", /* timestamp= */ 1, /* person= */ null)
-                .setMessageType(MessageType.MESSAGE_TYPE_SENT);
-        Message msg2 = new Message("text2", /* timestamp= */ 2, /* person= */ null)
-                .setMessageStatus(MessageStatus.MESSAGE_STATUS_READ);
-        Message msg3 = new Message("text3", /* timestamp= */ 3, /* person= */ null)
-                .setMessageStatus(MessageStatus.MESSAGE_STATUS_READ);
-        Message msg4 = new Message("text4", /* timestamp= */ 4, /* person= */ null)
-                .setMessageType(MessageType.MESSAGE_TYPE_SENT);
-
-        Pair<List<Message>, Message> pair =
-                MessageUtils.getReadMessagesAndReplyTimestamp(Arrays.asList(msg4, msg3, msg2, msg));
-        List<Message> messages = pair.first;
-        Message reply = pair.second;
-
-        assertThat(messages).containsExactly(msg2, msg3).inOrder();
-        assertThat(reply).isEqualTo(msg4);
+        assertThat(messages).containsExactly(msg3, msg2).inOrder();
     }
 
     private MmsSmsMessage createMessage(

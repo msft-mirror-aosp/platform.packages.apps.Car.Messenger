@@ -26,7 +26,6 @@ import static java.util.Comparator.comparingLong;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.Telephony.TextBasedSmsColumns;
-import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,12 +40,13 @@ import com.android.car.messenger.core.interfaces.AppFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 /** Message Parser that provides useful static methods to parse 1-1 and Group MMS messages. */
 public final class MessageUtils {
     private static final String TAG = "CM.MessageUtils";
+
+    private MessageUtils() {}
 
     /**
      * Returns all messages in the given cursors in descending order.
@@ -70,12 +70,13 @@ public final class MessageUtils {
     }
 
     /**
-     * Returns unread messages from a conversation, in ascending order.
+     * Returns unread messages from a conversation in descending order.
      *
      * @param messages The messages in descending order
      */
     @NonNull
     public static List<Message> getUnreadMessages(@NonNull List<Message> messages) {
+        messages.sort(comparingLong(Conversation.Message::getTimestamp).reversed());
         int i = 0;
         for (Conversation.Message message : messages) {
             if (message.getMessageStatus() != MessageStatus.MESSAGE_STATUS_UNREAD) {
@@ -84,47 +85,7 @@ public final class MessageUtils {
             i++;
         }
         List<Message> unreadMessages = messages.subList(0, i);
-        unreadMessages.sort(comparingLong(Conversation.Message::getTimestamp));
         return unreadMessages;
-    }
-
-
-    /**
-     * Gets Read Messages in ascending order and Last Reply
-     *
-     * @param messages List of messages in descending order
-     */
-    @NonNull
-    public static Pair<List<Message>, Message> getReadMessagesAndReplyTimestamp(
-            @NonNull List<Message> messages) {
-        List<Message> readMessages = new ArrayList<>();
-        AtomicReference<Message> replyMessage = new AtomicReference<>();
-        AtomicReference<Long> lastReply = new AtomicReference<>(0L);
-
-        for (Message message : messages) {
-            // Desired impact: 4. Reply -> 3. Messages -> 2. Reply -> 1 Messages (stop
-            // parsing at 2.)
-            // lastReply references 4., messages references 3.
-            // Desired impact: 3. Messages -> 2. Reply -> 1. Messages (stop parsing at 2.)
-            // lastReply references 2., messages references 3.
-            int messageStatus = message.getMessageStatus();
-            if (message.getMessageType() == MessageType.MESSAGE_TYPE_SENT) {
-                if (lastReply.get() < message.getTimestamp()) {
-                    lastReply.set(message.getTimestamp());
-                    replyMessage.set(message);
-                }
-                if (!readMessages.isEmpty()) {
-                    break;
-                }
-            } else if (messageStatus == MessageStatus.MESSAGE_STATUS_READ
-                    || messageStatus == MessageStatus.MESSAGE_STATUS_NONE) {
-                readMessages.add(message);
-            } else {
-                break;
-            }
-        }
-        readMessages.sort(comparingLong(Message::getTimestamp));
-        return new Pair<>(readMessages, replyMessage.get());
     }
 
     /**
@@ -196,6 +157,4 @@ public final class MessageUtils {
         }
         return message;
     }
-
-    private MessageUtils() {}
 }
