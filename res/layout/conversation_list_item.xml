@@ -102,7 +102,7 @@ limitations under the License.
                 android:text="@string/dot"
                 tools:visibility="gone" />
 
-            <com.android.car.messenger.core.ui.shared.DateTimeView
+            <com.android.car.messenger.ui.widgets.DateTimeView
                 android:id="@+id/date_time_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
