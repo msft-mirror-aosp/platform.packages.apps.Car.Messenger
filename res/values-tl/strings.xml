@@ -22,6 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"Kumonekta sa Bluetooth"</string>
     <string name="replied" msgid="4048102393748554631">"Nakasagot na"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"I-tap para basahin nang malakas"</string>
+    <string name="time_desync_error_title" msgid="7903285178550986965">"I-set up ang petsa at oras ng iyong sasakyan"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"Siguraduhing tama ang nakatakdang petsa at oras sa iyong sasakyan at telepono. Posibleng may mangyaring hindi inaasahang gawi sa pagmemensahe."</string>
     <string name="action_reply" msgid="8404237041838225390">"Sumagot"</string>
     <string name="action_mute" msgid="7982388368125401058">"I-mute"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"Markahan Bilang Nabasa Na"</string>
@@ -29,6 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"Nakakatanggap ng Mga Mensahe sa kotse"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"Channel ng Mensahe"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"Serbisyo ng Receiver ng Mensahe sa Phone"</string>
+    <string name="error_channel_description" msgid="2727225157700797643">"Channel ng Error"</string>
     <string name="new_message" msgid="8983092328255956122">"Bagong Mensahe"</string>
     <string name="cd_unread" msgid="8970475932047388299">"Hindi pa nababasa"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"Icon ng Pag-uusap"</string>

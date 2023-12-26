@@ -22,6 +22,10 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"بلوٹوتھ سے منسلک کریں"</string>
     <string name="replied" msgid="4048102393748554631">"جواب دیا گیا"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"بلند آواز سے پڑھنے کیلئے تھپتھپائیں"</string>
+    <!-- no translation found for time_desync_error_title (7903285178550986965) -->
+    <skip />
+    <!-- no translation found for time_desync_error_text (1537219557576885842) -->
+    <skip />
     <string name="action_reply" msgid="8404237041838225390">"جواب دیں"</string>
     <string name="action_mute" msgid="7982388368125401058">"خاموش کریں"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"پڑھا ہوا کے بطور نشان زد کریں"</string>
@@ -29,6 +33,8 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"کار میں پیغامات موصول ہو رہے ہیں"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"چینل کا پیغام"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"فون پیغام کے موصول کنندہ کی سروس"</string>
+    <!-- no translation found for error_channel_description (2727225157700797643) -->
+    <skip />
     <string name="new_message" msgid="8983092328255956122">"نیا پیغام"</string>
     <string name="cd_unread" msgid="8970475932047388299">"نہ پڑھا ہوا"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"گفتگو کا آئیکن"</string>

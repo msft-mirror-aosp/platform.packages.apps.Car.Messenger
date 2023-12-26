@@ -22,6 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"Povezovanje z Bluetoothom"</string>
     <string name="replied" msgid="4048102393748554631">"Odgovorjeno"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"Dotik za branje na glas"</string>
+    <string name="time_desync_error_title" msgid="7903285178550986965">"Nastavitev datum in ure avtomobila"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"Datum in ura avtomobila in telefona morata biti pravilno nastavljena. Morda bo prišlo do nepričakovanega delovanja sporočanja."</string>
     <string name="action_reply" msgid="8404237041838225390">"Odgovori"</string>
     <string name="action_mute" msgid="7982388368125401058">"Izklopi zvok"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"Označi kot prebrano"</string>
@@ -29,6 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"Prejemanje sporočil v avtomobilu"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"Kanal za sporočila"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"Storitev sprejem. sporočil prek telefona"</string>
+    <string name="error_channel_description" msgid="2727225157700797643">"Kanal za napake"</string>
     <string name="new_message" msgid="8983092328255956122">"Novo sporočilo"</string>
     <string name="cd_unread" msgid="8970475932047388299">"Neprebrano"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"Ikona pogovora"</string>
