@@ -102,7 +102,7 @@ limitations under the License.
                 android:text="@string/dot"
                 tools:visibility="gone" />
 
-            <com.android.car.messenger.core.ui.shared.DateTimeView
+            <com.android.car.messenger.ui.widgets.DateTimeView
                 android:id="@+id/date_time_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -140,10 +140,11 @@ limitations under the License.
 
     <ImageView
         android:id="@+id/reply_action_button"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/message_history_item_padding"
-        android:background="?android:attr/selectableItemBackground"
+        android:padding="@dimen/car_ui_rotary_focus_stroke_width"
+        android:background="@drawable/action_button_background"
         android:contentDescription="@string/cd_reply_action_button"
         android:scaleType="center"
         android:src="@drawable/ic_reply"

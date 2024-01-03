@@ -18,8 +18,13 @@
     <bool name="group_avatar_fill_background">false</bool>
     <bool name="direct_send_supported">true</bool>
     <bool name="direct_reply_supported">true</bool>
-    <bool name="ttr_conversation_supported">false</bool>
+    <bool name="ttr_conversation_supported">true</bool>
     <bool name="filter_local_sim">true</bool>
+    <bool name="enable_time_desync_reminder">true</bool>
+
+    <integer name="time_desync_reminder_interval_mins">120</integer>
+    <integer name="max_unread_count">10</integer>
+    <integer name="conversation_size_limit">15</integer>
 
     <!--
     A number between 1 and 4 is required.
@@ -28,6 +33,12 @@
     where n is the value.
     -->
     <integer name="group_avatar_max_group_size">4</integer>
+    <!--
+    Roundness factor of a rounded rectangle to render avatar images into. A
+    value of 0 means, a square, a value of 100 means a circle. Values in between means how much
+    of the side of the rectangle is actually round.
+    -->
+    <integer name="group_avatar_images_corner_radius">100</integer>
 
     <integer name="config_letter_tile_text_style">0</integer>
 

@@ -22,19 +22,16 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="attr" name="progressViewLayout"/>
       <item type="bool" name="direct_reply_supported"/>
       <item type="bool" name="direct_send_supported"/>
+      <item type="bool" name="enable_time_desync_reminder"/>
+      <item type="bool" name="filter_local_sim"/>
       <item type="bool" name="group_avatar_fill_background"/>
       <item type="bool" name="ttr_conversation_supported"/>
       <item type="color" name="background_image_30p_black"/>
       <item type="color" name="car_card_ripple_background"/>
-      <item type="color" name="car_grey_50"/>
-      <item type="color" name="car_grey_868"/>
-      <item type="color" name="car_red_500a"/>
       <item type="color" name="divider_color"/>
       <item type="color" name="divider_color_light"/>
       <item type="color" name="group_avatar_background_color"/>
       <item type="color" name="group_avatar_stroke_color"/>
-      <item type="color" name="hero_button_background_color"/>
-      <item type="color" name="hero_button_text_color"/>
       <item type="color" name="icon_tint"/>
       <item type="color" name="letter_tile_default_color"/>
       <item type="color" name="letter_tile_font_color"/>
@@ -46,17 +43,13 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="color" name="uxr_button_text_color"/>
       <item type="color" name="uxr_button_text_color_selector"/>
       <item type="color" name="uxr_button_text_disabled_color"/>
+      <item type="dimen" name="action_button_corner_radius"/>
       <item type="dimen" name="avatar_icon_size"/>
       <item type="dimen" name="car_keyline_1"/>
       <item type="dimen" name="car_keyline_2"/>
       <item type="dimen" name="contact_avatar_corner_radius_percent"/>
       <item type="dimen" name="conversation_avatar_width"/>
-      <item type="dimen" name="dialog_max_width"/>
       <item type="dimen" name="dot_size"/>
-      <item type="dimen" name="hero_button_corner_radius"/>
-      <item type="dimen" name="hero_button_height"/>
-      <item type="dimen" name="hero_button_max_width"/>
-      <item type="dimen" name="hero_button_min_width"/>
       <item type="dimen" name="letter_spacing_body1"/>
       <item type="dimen" name="letter_spacing_body2"/>
       <item type="dimen" name="letter_spacing_body3"/>
@@ -80,9 +73,9 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="dimen" name="unread_text_size"/>
       <item type="dimen" name="vertical_divider_inset"/>
       <item type="dimen" name="vertical_divider_width"/>
+      <item type="drawable" name="action_button_background"/>
       <item type="drawable" name="car_ui_icon_reply"/>
       <item type="drawable" name="car_ui_icon_toggle_mute"/>
-      <item type="drawable" name="hero_button_background"/>
       <item type="drawable" name="ic_launcher_icon"/>
       <item type="drawable" name="ic_message"/>
       <item type="drawable" name="ic_mute"/>
@@ -103,6 +96,7 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="id" name="guideline_end"/>
       <item type="id" name="icon"/>
       <item type="id" name="last_action_icon_view"/>
+      <item type="id" name="list_focus_area"/>
       <item type="id" name="list_view"/>
       <item type="id" name="loading_frame_layout"/>
       <item type="id" name="mute_action_button"/>
@@ -116,7 +110,11 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="id" name="title"/>
       <item type="id" name="unread_badge"/>
       <item type="integer" name="config_letter_tile_text_style"/>
+      <item type="integer" name="conversation_size_limit"/>
+      <item type="integer" name="group_avatar_images_corner_radius"/>
       <item type="integer" name="group_avatar_max_group_size"/>
+      <item type="integer" name="max_unread_count"/>
+      <item type="integer" name="time_desync_reminder_interval_mins"/>
       <item type="layout" name="conversation_list_item"/>
       <item type="layout" name="empty_view"/>
       <item type="layout" name="error_view"/>
@@ -156,6 +154,7 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="string" name="duration_years_relative_future"/>
       <item type="string" name="duration_years_shortest"/>
       <item type="string" name="duration_years_shortest_future"/>
+      <item type="string" name="error_channel_description"/>
       <item type="string" name="message_channel_description"/>
       <item type="string" name="message_channel_name"/>
       <item type="string" name="message_overflow"/>
@@ -165,8 +164,8 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="string" name="participant_overflow_text"/>
       <item type="string" name="replied"/>
       <item type="string" name="tap_to_read_aloud"/>
-      <item type="style" name="FullScreenErrorButtonStyle"/>
-      <item type="style" name="FullScreenErrorMessageStyle"/>
+      <item type="string" name="time_desync_error_text"/>
+      <item type="string" name="time_desync_error_title"/>
       <item type="style" name="LoadingInfoActionButtonStyle"/>
       <item type="style" name="LoadingInfoMessageStyle"/>
       <item type="style" name="LoadingInfoSecondaryMessageStyle"/>

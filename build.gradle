@@ -133,6 +133,7 @@ dependencies {
 
     implementation project(':car-apps-common')
     implementation project(":car-assist-lib")
+    implementation project(path: ':car-messenger-common')
     implementation project(":car-messenger-common:model")
     implementation project(":car-ui-lib")
     implementation project(':car-apps-common')

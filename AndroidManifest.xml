@@ -23,14 +23,14 @@
         android:targetSdkVersion="31" />
 
     <application
-        android:name="com.android.car.messenger.impl.CarMessengerApp"
+        android:name="com.android.car.messenger.CarMessengerApp"
         android:icon="@drawable/ic_launcher_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Messaging">
 
         <activity
-            android:name=".core.ui.launcher.MessageLauncherActivity"
+            android:name=".ui.launcher.MessageLauncherActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
@@ -69,7 +69,7 @@
 
         <!-- BroadcastReceiver that listens for incoming SMS messages -->
         <receiver
-            android:name=".impl.receivers.MmsReceiver"
+            android:name=".services.MmsReceiver"
             android:exported="false"
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter>
@@ -80,18 +80,19 @@
 
         <!-- BroadcastReceiver that listens for incoming MMS messages -->
         <receiver
-            android:name=".core.service.OnBootReceiver"
+            android:name=".services.OnBootReceiver"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 
         <!-- BroadcastReceiver for car booting -->
         <receiver
-            android:name=".impl.receivers.SmsReceiver"
+            android:name=".services.SmsReceiver"
             android:exported="false"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
@@ -101,7 +102,7 @@
         </receiver>
 
         <service
-            android:name=".core.service.MessengerService"
+            android:name=".services.MessengerService"
             android:exported="false"
             android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
             <intent-filter>

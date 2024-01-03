@@ -38,6 +38,12 @@
     <!-- Dot separator [CHAR LIMIT=1] -->
     <string name="dot" translatable="false">·</string>
 
+    <!-- Title of time desync error notification [CHAR LIMIT=80] -->
+    <string name="time_desync_error_title">Setup your car\'s date and time</string>
+    <!-- Description of time desync error notification [CHAR LIMIT=180] -->
+    <string name="time_desync_error_text">Please make sure your car and phone\'s datetime are set correctly. Unexpected messaging behavior may occur.</string>
+
+
     <!-- Notification action button strings -->
     <string name="action_reply">Reply</string>
     <string name="action_mute">Mute</string>
@@ -52,6 +58,8 @@
     <string name="message_channel_name">Message Channel</string>
     <!-- New Message String [CHAR LIMIT=40] -->
     <string name="message_channel_description">Phone Message Receiver Service</string>
+    <!-- The message error channel description [CHAR LIMIT=40] -->
+    <string name="error_channel_description">Error Channel</string>
 
     <!-- Status when there is a new message [CHAR LIMIT=40] -->
     <string name="new_message">New Message</string>

@@ -22,6 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"連接藍牙"</string>
     <string name="replied" msgid="4048102393748554631">"已回覆"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"輕按即可朗讀"</string>
+    <string name="time_desync_error_title" msgid="7903285178550986965">"設定汽車的日期和時間"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"請確認汽車及手機的日期和時間設定正確。可能發生非預期的訊息行為。"</string>
     <string name="action_reply" msgid="8404237041838225390">"回覆"</string>
     <string name="action_mute" msgid="7982388368125401058">"靜音"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"標示為已讀"</string>
@@ -29,6 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"汽車將可接收訊息"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"訊息渠道"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"手機訊息接收服務"</string>
+    <string name="error_channel_description" msgid="2727225157700797643">"錯誤頻道"</string>
     <string name="new_message" msgid="8983092328255956122">"新短訊"</string>
     <string name="cd_unread" msgid="8970475932047388299">"未讀"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"對話圖示"</string>

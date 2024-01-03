@@ -22,6 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"ব্লুটুথৰ সৈতে সংযোগ কৰক"</string>
     <string name="replied" msgid="4048102393748554631">"প্ৰত্যুত্তৰ দিয়া হৈছে"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"ডাঙৰকৈ পঢ়া শুনিবলৈ টিপক"</string>
+    <string name="time_desync_error_title" msgid="7903285178550986965">"আপোনাৰ গাড়ীৰ তাৰিখ আৰু সময় ছেটআপ কৰক"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"অনুগ্ৰহ কৰি আপোনাৰ গাড়ী আৰু ফ’নটোৰ তাৰিখ আৰু সময় সঠিকভাৱে ছেট কৰি ৰখাটো নিশ্চিত কৰক। বাৰ্তা বিনিময় কৰোঁতে অপ্ৰত্যাশিত আচৰণ দেখা পোৱা যাব পাৰে।"</string>
     <string name="action_reply" msgid="8404237041838225390">"প্ৰত্যুত্তৰ দিয়ক"</string>
     <string name="action_mute" msgid="7982388368125401058">"মিউট কৰক"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"পঢ়া হৈছে বুলি চিহ্নিত কৰক"</string>
@@ -29,6 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"গাড়ীত বাৰ্তা লাভ কৰি আছে"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"বাৰ্তাৰ চেনেল"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"ফ’নৰ বাৰ্তাৰ প্ৰাপক সম্পৰ্কীয় সেৱা"</string>
+    <string name="error_channel_description" msgid="2727225157700797643">"আসোঁৱাহৰ চেনেল"</string>
     <string name="new_message" msgid="8983092328255956122">"নতুন বাৰ্তা"</string>
     <string name="cd_unread" msgid="8970475932047388299">"নপঢ়া"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"বাৰ্তালাপৰ চিহ্ন"</string>

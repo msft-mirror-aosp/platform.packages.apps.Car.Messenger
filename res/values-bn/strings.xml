@@ -22,6 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"ব্লুটুথের সাথে কানেক্ট করুন"</string>
     <string name="replied" msgid="4048102393748554631">"উত্তর দেওয়া হয়েছে"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"জোরে পড়তে ট্যাপ করুন"</string>
+    <string name="time_desync_error_title" msgid="7903285178550986965">"আপনার গাড়ির তারিখ ও সময় সেটআপ করা"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"আপনার গাড়ির এবং ফোনের তারিখ ও সময় সঠিকভাবে সেট করা হয়েছে কিনা দেখে নিন। এটি না করলে মেসেজ ব্যবহার করার সময় সমস্যা হতে পারে।"</string>
     <string name="action_reply" msgid="8404237041838225390">"উত্তর দিন"</string>
     <string name="action_mute" msgid="7982388368125401058">"মিউট"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"\'পড়া হয়েছে\' হিসেবে চিহ্নিত করুন"</string>
@@ -29,6 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"গাড়িতে মেসেজ রিসিভ করা হচ্ছে"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"ম্যাসেজ চ্যানেল"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"ফোন মেসেজ রিসিভার পরিষেবা"</string>
+    <string name="error_channel_description" msgid="2727225157700797643">"সমস্যা আছে এমন চ্যানেল"</string>
     <string name="new_message" msgid="8983092328255956122">"নতুন মেসেজ"</string>
     <string name="cd_unread" msgid="8970475932047388299">"পড়া হয়নি"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"কথোপকথনের আইকন"</string>

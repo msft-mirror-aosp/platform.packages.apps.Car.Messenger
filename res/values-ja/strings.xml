@@ -22,6 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"Bluetooth に接続"</string>
     <string name="replied" msgid="4048102393748554631">"返信済み"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"タップで読み上げ"</string>
+    <string name="time_desync_error_title" msgid="7903285178550986965">"車の日時を設定する"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"車とスマートフォンの日時設定が正しいか確認してください。予期しないメッセージが表示される可能性があります。"</string>
     <string name="action_reply" msgid="8404237041838225390">"返信"</string>
     <string name="action_mute" msgid="7982388368125401058">"ミュート"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"既読にする"</string>
@@ -29,6 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"車でメッセージを受信しています"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"メッセージ チャンネル"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"スマートフォン メッセージ受信サービス"</string>
+    <string name="error_channel_description" msgid="2727225157700797643">"エラー チャンネル"</string>
     <string name="new_message" msgid="8983092328255956122">"新しいメッセージ"</string>
     <string name="cd_unread" msgid="8970475932047388299">"未読"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"会話アイコン"</string>
