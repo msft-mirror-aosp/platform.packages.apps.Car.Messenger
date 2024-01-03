@@ -22,10 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"Mit Bluetooth verbinden"</string>
     <string name="replied" msgid="4048102393748554631">"Beantwortet"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"Zum Vorlesen tippen"</string>
-    <!-- no translation found for time_desync_error_title (7903285178550986965) -->
-    <skip />
-    <!-- no translation found for time_desync_error_text (1537219557576885842) -->
-    <skip />
+    <string name="time_desync_error_title" msgid="7903285178550986965">"Datum und Uhrzeit des Autos einstellen"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"Bitte achte darauf, dass das Datum und die Uhrzeit deines Autos und Smartphones korrekt eingestellt sind. Das Empfangen von Nachrichten verläuft möglicherweise nicht wie gewohnt."</string>
     <string name="action_reply" msgid="8404237041838225390">"Antworten"</string>
     <string name="action_mute" msgid="7982388368125401058">"Stummschalten"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"Als gelesen markieren"</string>
@@ -33,8 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"Nachrichten werden im Auto empfangen"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"Kanal für Nachrichten"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"Nachrichtenempfänger auf dem Smartphone"</string>
-    <!-- no translation found for error_channel_description (2727225157700797643) -->
-    <skip />
+    <string name="error_channel_description" msgid="2727225157700797643">"Falscher Kanal"</string>
     <string name="new_message" msgid="8983092328255956122">"Neue Nachricht"</string>
     <string name="cd_unread" msgid="8970475932047388299">"Ungelesen"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"Symbol „Unterhaltung“"</string>

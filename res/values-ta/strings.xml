@@ -22,10 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"புளூடூத் உடன் இணை"</string>
     <string name="replied" msgid="4048102393748554631">"பதிலளிக்கப்பட்டது"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"சத்தமாக வாசிக்க தட்டவும்"</string>
-    <!-- no translation found for time_desync_error_title (7903285178550986965) -->
-    <skip />
-    <!-- no translation found for time_desync_error_text (1537219557576885842) -->
-    <skip />
+    <string name="time_desync_error_title" msgid="7903285178550986965">"உங்கள் காரின் தேதியையும் நேரத்தையும் அமையுங்கள்"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"உங்கள் கார் மற்றும் மொபைலின் தேதியும் நேரமும் சரியாக அமைக்கப்பட்டிருப்பதை உறுதிசெய்யவும். எதிர்பாராத மெசேஜிங் செயல்பாடு ஏற்படக்கூடும்."</string>
     <string name="action_reply" msgid="8404237041838225390">"பதிலளி"</string>
     <string name="action_mute" msgid="7982388368125401058">"ஒலியடக்கு"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"படித்ததாகக் குறி"</string>
@@ -33,8 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"காரில் மெசேஜ்களைப் பெறுதல்"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"மெசேஜ் சேனல்"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"மொபைல் மெசேஜைப் பெறுகின்ற சேவை"</string>
-    <!-- no translation found for error_channel_description (2727225157700797643) -->
-    <skip />
+    <string name="error_channel_description" msgid="2727225157700797643">"சேனல் பிழை"</string>
     <string name="new_message" msgid="8983092328255956122">"புதிய மெசேஜ்"</string>
     <string name="cd_unread" msgid="8970475932047388299">"படிக்காதது"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"உரையாடல் ஐகான்"</string>

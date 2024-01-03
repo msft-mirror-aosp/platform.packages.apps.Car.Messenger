@@ -29,7 +29,7 @@
     <string name="action_mark_as_read" msgid="2872221687403147551">"标记为已读"</string>
     <string name="app_running_msg_notification_title" msgid="3569467829547340722">"通讯服务已启用"</string>
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"在车载设备上接收消息"</string>
-    <string name="message_channel_name" msgid="8568703344795660393">"消息频道"</string>
+    <string name="message_channel_name" msgid="8568703344795660393">"消息渠道"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"手机消息接收器服务"</string>
     <string name="error_channel_description" msgid="2727225157700797643">"错误渠道"</string>
     <string name="new_message" msgid="8983092328255956122">"新消息"</string>

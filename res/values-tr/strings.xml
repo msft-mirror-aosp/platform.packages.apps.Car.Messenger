@@ -22,10 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"Bluetooth\'a bağlan"</string>
     <string name="replied" msgid="4048102393748554631">"Yanıtlandı"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"Yüksek sesle okunması için dokunun"</string>
-    <!-- no translation found for time_desync_error_title (7903285178550986965) -->
-    <skip />
-    <!-- no translation found for time_desync_error_text (1537219557576885842) -->
-    <skip />
+    <string name="time_desync_error_title" msgid="7903285178550986965">"Arabanızın tarih ve saat bilgisini ayarlayın"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"Arabanızda ve telefonunuzda tarih ve saat bilgisinin doğru ayarlandığından emin olun. Beklenmedik mesajlaşma davranışı olabilir."</string>
     <string name="action_reply" msgid="8404237041838225390">"Yanıtla"</string>
     <string name="action_mute" msgid="7982388368125401058">"Yoksay"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"Okundu Olarak İşaretle"</string>
@@ -33,8 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"Mesajlar arabada alınıyor"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"Mesaj Kanalı"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"Telefon Mesaj Alıcı Hizmeti"</string>
-    <!-- no translation found for error_channel_description (2727225157700797643) -->
-    <skip />
+    <string name="error_channel_description" msgid="2727225157700797643">"Hata Kanalı"</string>
     <string name="new_message" msgid="8983092328255956122">"Yeni Mesaj"</string>
     <string name="cd_unread" msgid="8970475932047388299">"Okunmadı"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"Görüşme Simgesi"</string>

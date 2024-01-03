@@ -22,10 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"Prisijungimas prie „Bluetooth“"</string>
     <string name="replied" msgid="4048102393748554631">"Atsakyta"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"Palieskite, kad būtų skaitoma garsiai"</string>
-    <!-- no translation found for time_desync_error_title (7903285178550986965) -->
-    <skip />
-    <!-- no translation found for time_desync_error_text (1537219557576885842) -->
-    <skip />
+    <string name="time_desync_error_title" msgid="7903285178550986965">"Nustatykite automobilyje datą ir laiką"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"Įsitikinkite, kad jūsų automobilio ir telefono data ir laikas nustatyti tinkamai. Susirašinėjimo funkcija gali veikti ne taip, kaip tikimasi."</string>
     <string name="action_reply" msgid="8404237041838225390">"Atsakyti"</string>
     <string name="action_mute" msgid="7982388368125401058">"Nutildyti"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"Pažymėti kaip skaitytą"</string>
@@ -33,8 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"Pranešimų gavimas automobilyje"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"Pranešimų kanalas"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"Telefono pranešimų imtuvo paslauga"</string>
-    <!-- no translation found for error_channel_description (2727225157700797643) -->
-    <skip />
+    <string name="error_channel_description" msgid="2727225157700797643">"Kanalo klaida"</string>
     <string name="new_message" msgid="8983092328255956122">"Naujas pranešimas"</string>
     <string name="cd_unread" msgid="8970475932047388299">"Neskaityti"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"Pokalbio piktograma"</string>

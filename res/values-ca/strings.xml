@@ -22,10 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"Connecta el Bluetooth"</string>
     <string name="replied" msgid="4048102393748554631">"S\'ha respost"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"Toca per llegir en veu alta"</string>
-    <!-- no translation found for time_desync_error_title (7903285178550986965) -->
-    <skip />
-    <!-- no translation found for time_desync_error_text (1537219557576885842) -->
-    <skip />
+    <string name="time_desync_error_title" msgid="7903285178550986965">"Configura la data i l\'hora del cotxe"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"Assegura\'t que la data i l\'hora del cotxe i del telèfon estiguin configurades correctament. És possible que es produeixi un comportament inesperat dels missatges."</string>
     <string name="action_reply" msgid="8404237041838225390">"Respon"</string>
     <string name="action_mute" msgid="7982388368125401058">"Silencia"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"Marca com a llegit"</string>
@@ -33,8 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"S\'estan rebent missatges al cotxe"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"Canal de missatgeria"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"Servei de recepció de missatges de telèfon"</string>
-    <!-- no translation found for error_channel_description (2727225157700797643) -->
-    <skip />
+    <string name="error_channel_description" msgid="2727225157700797643">"Canal d\'errors"</string>
     <string name="new_message" msgid="8983092328255956122">"Missatge nou"</string>
     <string name="cd_unread" msgid="8970475932047388299">"No llegit"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"Icona de conversa"</string>

@@ -22,10 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"Підключитися до Bluetooth"</string>
     <string name="replied" msgid="4048102393748554631">"Відповідь надіслано"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"Натисніть, щоб увімкнути озвучення"</string>
-    <!-- no translation found for time_desync_error_title (7903285178550986965) -->
-    <skip />
-    <!-- no translation found for time_desync_error_text (1537219557576885842) -->
-    <skip />
+    <string name="time_desync_error_title" msgid="7903285178550986965">"Установіть дату й час в автомобілі"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"Перевірте, чи в автомобілі й на телефоні правильно встановлено дату й час. Може некоректно працювати обмін повідомленнями."</string>
     <string name="action_reply" msgid="8404237041838225390">"Відповісти"</string>
     <string name="action_mute" msgid="7982388368125401058">"Вимкнути звук"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"Позначити як прочитане"</string>
@@ -33,8 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"Отримання повідомлень в автомобілі"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"Канал повідомлення"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"Сервіс отримання повідомлень на телефоні"</string>
-    <!-- no translation found for error_channel_description (2727225157700797643) -->
-    <skip />
+    <string name="error_channel_description" msgid="2727225157700797643">"Канал повідомлень про помилки"</string>
     <string name="new_message" msgid="8983092328255956122">"Нове повідомлення"</string>
     <string name="cd_unread" msgid="8970475932047388299">"Не прочитано"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"Значок розмови"</string>
