@@ -31,7 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"Sõnumeid võetakse vastu autos"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"Sõnumikanal"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"Telefoni sõnumite vastuvõtuteenus"</string>
-    <string name="error_channel_description" msgid="2727225157700797643">"Vigane kanal"</string>
+    <string name="error_channel_description" msgid="2727225157700797643">"Veateadete kanal"</string>
     <string name="new_message" msgid="8983092328255956122">"Uus sõnum"</string>
     <string name="cd_unread" msgid="8970475932047388299">"Lugemata"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"Vestluse ikoon"</string>
