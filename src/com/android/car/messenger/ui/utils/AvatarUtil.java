@@ -160,12 +160,12 @@ public final class AvatarUtil {
         float cornerRadius = groupAvatarConfigs.mCornerRadius;
 
         final Path path = new Path();
-        float widthHeight = (float) min(width, (height / 2));
+        float widthHeight = (float) min(width / 2, height / 2);
         float x = (float) (width / 2);
         float y = (float) (height / 2);
         path.addRoundRect(
-                x,
-                y,
+                x - widthHeight,
+                y - widthHeight,
                 x + widthHeight,
                 y + widthHeight,
                 cornerRadius * widthHeight / 2f,

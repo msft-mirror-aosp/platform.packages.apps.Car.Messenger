@@ -87,7 +87,10 @@ public class ConversationItemViewHolder extends RecyclerView.ViewHolder {
         mPreviewTextView.setText(uiData.getTextPreview());
         mUnreadBadge.setText(uiData.getUnreadCountText());
         mDateTimeView.setTime(uiData.mLastMessageTimestamp);
-        mAvatarView.setImageDrawable(uiData.getAvatar());
+        if (uiData.getAvatar() != null) {
+            mAvatarView.setBackgroundColor(0);
+            mAvatarView.setImageDrawable(uiData.getAvatar());
+        }
         mPlayMessageTouchView.setOnClickListener(null);
         mSubtitleIconView.setImageDrawable(uiData.getSubtitleIcon());
         boolean showPreviewSeparator = !uiData.getTextPreview().isEmpty();
