@@ -14,11 +14,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<com.android.car.messenger.core.ui.shared.LoadingFrameLayout
+<com.android.car.messenger.ui.widgets.LoadingFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/loading_frame_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include layout="@layout/list_fragment" />
-</com.android.car.messenger.core.ui.shared.LoadingFrameLayout>
+</com.android.car.messenger.ui.widgets.LoadingFrameLayout>

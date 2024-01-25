@@ -22,6 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"Bluetooth-қа қосылу"</string>
     <string name="replied" msgid="4048102393748554631">"Жауап берілді."</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"Дауыстап оқу үшін түртіңіз."</string>
+    <string name="time_desync_error_title" msgid="7903285178550986965">"Автокөлігіңіздің күн және уақыт параметрлерін реттеңіз"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"Автокөлігіңіз бен телефоныңыздың күн және уақыт мәліметі дұрыс орнатылғанын тексеріңіз. Хабар алмасу кезінде күтпеген жағдайлар орын алуы мүмкін."</string>
     <string name="action_reply" msgid="8404237041838225390">"Жауап беру"</string>
     <string name="action_mute" msgid="7982388368125401058">"Дыбысын өшіру"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"Оқылды деп белгілеу"</string>
@@ -29,6 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"Көлікте хабарлар алу"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"Хабар арнасы"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"Телефон хабарын алу қызметі"</string>
+    <string name="error_channel_description" msgid="2727225157700797643">"Қате арна"</string>
     <string name="new_message" msgid="8983092328255956122">"Жаңа хабар"</string>
     <string name="cd_unread" msgid="8970475932047388299">"Оқылмаған."</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"Әңгіме белгішесі"</string>

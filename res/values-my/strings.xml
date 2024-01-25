@@ -22,6 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"ဘလူးတုသ်သို့ ချိတ်ဆက်ခြင်း"</string>
     <string name="replied" msgid="4048102393748554631">"စာပြန်ပြီးပါပြီ"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"အသံထွက်ဖတ်ရန် တို့ပါ"</string>
+    <string name="time_desync_error_title" msgid="7903285178550986965">"သင့်ကား၏ ရက်စွဲနှင့်အချိန်ကို သတ်မှတ်ပါ"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"သင့်ကားနှင့် ဖုန်း၏ ရက်စွဲအချိန်ကို မှန်ကန်စွာသတ်မှတ်ထားကြောင်း သေချာပါစေ။ မျှော်လင့်မထားသော မက်ဆေ့ဂျ်ပေးပို့မှုများ ဖြစ်ပေါ်နိုင်သည်။"</string>
     <string name="action_reply" msgid="8404237041838225390">"စာပြန်ရန်"</string>
     <string name="action_mute" msgid="7982388368125401058">"အသံပိတ်ခြင်း"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"ဖတ်ပြီးဟု မှတ်သားခြင်း"</string>
@@ -29,6 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"ကားပေါ်၌ ‘မက်ဆေ့ဂျ်’ လက်ခံခြင်း"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"မက်ဆေ့ဂျ် ချန်နယ်"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"ဖုန်းမက်ဆေ့ဂျ် လက်ခံသည့် ဝန်ဆောင်မှု"</string>
+    <string name="error_channel_description" msgid="2727225157700797643">"ချန်နယ် အမှားအယွင်း"</string>
     <string name="new_message" msgid="8983092328255956122">"မက်ဆေ့ဂျ်အသစ်"</string>
     <string name="cd_unread" msgid="8970475932047388299">"မဖတ်ရသေး"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"စကားဝိုင်းသင်္ကေတ"</string>

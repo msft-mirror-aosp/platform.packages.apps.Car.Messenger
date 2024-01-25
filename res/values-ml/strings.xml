@@ -22,6 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"Bluetooth-ലേക്ക് കണക്‌റ്റ് ചെയ്യുക"</string>
     <string name="replied" msgid="4048102393748554631">"മറുപടി നൽകി"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"ഉറക്കെ വായിക്കാൻ ടാപ്പ് ചെയ്യുക"</string>
+    <string name="time_desync_error_title" msgid="7903285178550986965">"കാറിന്റെ തീയതിയും സമയവും സജ്ജീകരിക്കുക"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"കാറിന്റെയും ഫോണിന്റെയും തീയതിയും സമയവും ശരിയായി സജ്ജീകരിച്ചിട്ടുണ്ടെന്ന് ഉറപ്പാക്കുക. അപ്രതീക്ഷിതമായ സന്ദേശമയയ്ക്കൽ രീതി ഉണ്ടായേക്കാം."</string>
     <string name="action_reply" msgid="8404237041838225390">"മറുപടി നൽകുക"</string>
     <string name="action_mute" msgid="7982388368125401058">"മ്യൂട്ട് ചെയ്യുക"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"വായിച്ചതായി അടയാളപ്പെടുത്തുക"</string>
@@ -29,6 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"കാറിൽ സന്ദേശങ്ങൾ സ്വീകരിക്കുന്നു"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"സന്ദേശ ചാനൽ"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"ഫോൺ സന്ദേശം സ്വീകരിക്കുന്ന സേവനം"</string>
+    <string name="error_channel_description" msgid="2727225157700797643">"പിശക് ചാനൽ"</string>
     <string name="new_message" msgid="8983092328255956122">"പുതിയ സന്ദേശം"</string>
     <string name="cd_unread" msgid="8970475932047388299">"വായിക്കാത്തവ"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"സംഭാഷണ ഐക്കൺ"</string>

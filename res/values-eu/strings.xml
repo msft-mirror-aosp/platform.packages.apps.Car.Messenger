@@ -22,6 +22,8 @@
     <string name="connect_bluetooth_button_text" msgid="1879858507749591260">"Konektatu Bluetoothera"</string>
     <string name="replied" msgid="4048102393748554631">"Erantzunda"</string>
     <string name="tap_to_read_aloud" msgid="7309530473789467365">"Ozen irakurtzeko, sakatu hau"</string>
+    <string name="time_desync_error_title" msgid="7903285178550986965">"Konfiguratu autoaren data eta ordua"</string>
+    <string name="time_desync_error_text" msgid="1537219557576885842">"Egiaztatu autoaren eta telefonoaren data eta ordua ondo konfiguratuta daudela. Bestela, baliteke arazoak egotea mezularitza-zerbitzuarekin."</string>
     <string name="action_reply" msgid="8404237041838225390">"Erantzun"</string>
     <string name="action_mute" msgid="7982388368125401058">"Desaktibatu audioa"</string>
     <string name="action_mark_as_read" msgid="2872221687403147551">"Markatu irakurritako gisa"</string>
@@ -29,6 +31,7 @@
     <string name="app_running_msg_notification_content" msgid="7088111523632559583">"Mezuak autoan jasotzen"</string>
     <string name="message_channel_name" msgid="8568703344795660393">"Mezuen kanala"</string>
     <string name="message_channel_description" msgid="4316796171238519904">"Telefonoko mezuak jasotzeko zerbitzua"</string>
+    <string name="error_channel_description" msgid="2727225157700797643">"Errore bat gertatu da kanalean"</string>
     <string name="new_message" msgid="8983092328255956122">"Mezu berria"</string>
     <string name="cd_unread" msgid="8970475932047388299">"Irakurri gabe"</string>
     <string name="cd_conversation_icon" msgid="2600955838672124935">"Elkarrizketaren ikonoa"</string>

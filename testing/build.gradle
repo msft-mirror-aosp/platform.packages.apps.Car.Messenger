@@ -46,4 +46,6 @@ dependencies {
     implementation 'com.linkedin.dexmaker:dexmaker-mockito-inline-extended:2.28.1'
 
     implementation project(path: ':car-ui-lib')
+    implementation project(path: ':car-messenger-common')
+    implementation project(":car-messenger-common:model")
 }
