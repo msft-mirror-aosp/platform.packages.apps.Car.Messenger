@@ -27,6 +27,7 @@ limitations under the License.
         android:layout_height="@dimen/avatar_icon_size"
         android:layout_marginStart="@dimen/message_history_item_padding"
         android:contentDescription="@string/cd_conversation_icon"
+        android:background="@color/hero_button_background_color"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
